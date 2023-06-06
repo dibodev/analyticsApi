@@ -10,6 +10,10 @@ export default class WebsitesController {
     // Renvoyer le script à l'utilisateur.
     return response.send({ script })
   }
+  protected async all({ response }: HttpContextContract) {
+    const websites = await WebsiteService.getAll()
+    return response.send(websites)
+  }
 
   protected async collectData({ request, response }: HttpContextContract) {
     const { id, data } = request.body()

@@ -7,6 +7,7 @@ Route.get('/', async () => {
 
 Route.post('/generate-script', 'WebsitesController.generateScript')
 Route.post('/collect', 'WebsitesController.collectData')
+Route.get('/websites', 'WebsitesController.all')
 
 Route.get('/tracker.js', async ({ response }) => {
   return response.download(Application.publicPath('tracker.js'))
