@@ -1,8 +1,5 @@
 {
   "typescript": true,
-  "directories": {
-    "public": "public"
-  },
   "commands": [
     "./commands",
     "@adonisjs/core/build/commands/index.js",
