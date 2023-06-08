@@ -21,13 +21,13 @@ jobs:
           node-version: 18
 
       - name: 🔍 Install dependencies
-        run:  cd api && npm install
+        run:  npm install
 
       - name: 🧱 Build application
-        run: cd api && npm run build
+        run: npm run build
 
       - name: 🛁 Clean install a project
-        run: cd api/build && npm ci --production
+        run: cd build && npm ci --production
 
       - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
