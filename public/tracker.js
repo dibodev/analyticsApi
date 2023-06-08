@@ -16,7 +16,7 @@
       url: window.location.href,
       referrer: referrer,
       userAgent: navigator.userAgent,
-      visitorId
+      visitorId,
     }
 
     const xhr = new XMLHttpRequest();

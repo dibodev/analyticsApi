@@ -22,10 +22,7 @@ Route.get('/tracker', async () => {
 //   return response.download(Application.publicPath('tracker.js'))
 // })
 Route.get('/tracker.js', async ({ response }) => {
-  const baseUrl =
-    process.env.NODE_ENV === 'production'
-      ? 'https://analytics.dibodev.com'
-      : 'http://localhost:3333'
+  const baseUrl = process.env.NODE_ENV
 
   const trackerScript = await View.render('tracker', { baseUrl })
 
