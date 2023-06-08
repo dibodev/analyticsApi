@@ -22,6 +22,12 @@
     "@adonisjs/core",
     "@adonisjs/lucid"
   ],
+  "metaFiles": [
+    {
+      "pattern": "public/**",
+      "reloadServer": false
+    }
+  ],
   "aceProviders": [
     "@adonisjs/repl"
   ],
