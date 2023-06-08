@@ -1,11 +1,22 @@
 (function () {
   let id = new URL(document.currentScript.src).searchParams.get('id')
 
+  // Générer un identifiant de visite unique et le stocker dans le local storage
+  let visitorId = localStorage.getItem('visitorId');
+  if (!visitorId) {
+    visitorId = Math.random().toString(36).substring(2) + Date.now().toString(36);
+    localStorage.setItem('visitorId', visitorId);
+  }
+
+  // Obtenir l'URL du site référent, si disponible
+  let referrer = document.referrer || null;
+
   window.addEventListener('load', function () {
     const data = {
       url: window.location.href,
+      referrer: referrer,
       userAgent: navigator.userAgent,
-      // autres informations que vous voulez collecter...
+      visitorId
     }
 
     const xhr = new XMLHttpRequest();
