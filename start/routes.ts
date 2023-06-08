@@ -2,7 +2,7 @@ import Route from '@ioc:Adonis/Core/Route'
 import Application from '@ioc:Adonis/Core/Application'
 
 Route.get('/', async () => {
-  return { success: true }
+  return { success: true, version: 1 }
 })
 
 Route.post('/generate-script', 'WebsitesController.generateScript')
