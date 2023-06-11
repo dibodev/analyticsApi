@@ -1,14 +1,12 @@
 import { DateTime } from 'luxon'
-import { column, BaseModel } from '@ioc:Adonis/Lucid/Orm'
-export default class Website extends BaseModel {
+import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+
+export default class DailySalt extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
   @column()
-  public name: string
-
-  @column()
-  public domain: string
+  public salt: string
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
