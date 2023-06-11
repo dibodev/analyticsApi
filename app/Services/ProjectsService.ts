@@ -1,6 +1,6 @@
 import Project from 'App/Models/Project'
-import axios from 'axios'
 import UploadService from 'App/Services/UploadService'
+import DomainService from 'App/Services/DomainService'
 
 export default class ProjectsService {
   public static async getAll() {
@@ -8,10 +8,17 @@ export default class ProjectsService {
   }
 
   public static async create(domain: string, name: string) {
-    const faviconUrl = `https://icons.duckduckgo.com/ip3/${domain}.ico`
-    const response = await axios.get(faviconUrl)
-    await UploadService.uploadFile(response.data.file)
-    return await Project.create({ domain, name })
+    try {
+      const { favicon, contentType } = await DomainService.getDomainFavicon(domain)
+      if (favicon) {
+        const domainName = DomainService.getDomaineName(domain)
+        await UploadService.uploadImage(favicon, contentType, domainName)
+      }
+      return await Project.create({ domain, name })
+    } catch (error) {
+      console.error('Error retrieving favicon:', error)
+      return await Project.create({ domain, name })
+    }
   }
 
   public static async getById(id: number) {
