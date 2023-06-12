@@ -1,5 +1,4 @@
 import Project from 'App/Models/Project'
-import UploadService from 'App/Services/UploadService'
 import DomainService from 'App/Services/DomainService'
 
 export default class ProjectsService {
@@ -7,17 +6,13 @@ export default class ProjectsService {
     return await Project.all()
   }
 
-  public static async create(domain: string, name: string) {
+  public static async create(domain: string) {
     try {
-      const { favicon, contentType } = await DomainService.getDomainFavicon(domain)
-      if (favicon) {
-        const domainName = DomainService.getDomaineName(domain)
-        await UploadService.uploadImage(favicon, contentType, domainName)
-      }
-      return await Project.create({ domain, name })
+      const favicon = await DomainService.uploadDomainFavicon(domain)
+      return await Project.create({ domain, favicon })
     } catch (error) {
       console.error('Error retrieving favicon:', error)
-      return await Project.create({ domain, name })
+      return await Project.create({ domain })
     }
   }
 
@@ -25,10 +20,19 @@ export default class ProjectsService {
     return await Project.findOrFail(id)
   }
 
-  public static async update(id: number, domain?: string, name?: string) {
+  public static async update(id: number, domain?: string) {
     const project = await Project.findOrFail(id)
-    if (name) project.name = name
-    if (domain) project.domain = domain
+    if (domain) {
+      project.domain = domain
+
+      try {
+        project.favicon = await DomainService.uploadDomainFavicon(domain)
+      } catch (error) {
+        project.favicon = null
+        console.error('Error retrieving favicon:', error)
+      }
+    }
+
     await project.save()
 
     return project

@@ -9,8 +9,8 @@ export default class ProjectsController {
   }
 
   protected async store({ request }: HttpContextContract) {
-    const { name, domain } = await request.validate(CreateProjectValidator)
-    return await ProjectsService.create(domain, name)
+    const { domain } = await request.validate(CreateProjectValidator)
+    return await ProjectsService.create(domain)
   }
 
   protected async show({ params }: HttpContextContract) {
@@ -18,8 +18,8 @@ export default class ProjectsController {
   }
 
   protected async update({ params, request }: HttpContextContract) {
-    const { name, domain } = await request.validate(UpdateProjectValidator)
-    return await ProjectsService.update(params.id, domain, name)
+    const { domain } = await request.validate(UpdateProjectValidator)
+    return await ProjectsService.update(params.id, domain)
   }
 
   protected async destroy({ params, response }: HttpContextContract) {

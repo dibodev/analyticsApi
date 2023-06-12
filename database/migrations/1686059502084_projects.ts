@@ -6,8 +6,8 @@ export default class extends BaseSchema {
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments()
-      table.string('name').notNullable()
       table.string('domain').notNullable().unique()
+      table.string('favicon').nullable()
       table.timestamps(true, true)
     })
   }

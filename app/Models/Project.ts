@@ -7,7 +7,7 @@ export default class Project extends BaseModel {
   public id: number
 
   @column()
-  public name: string
+  public favicon: string | null
 
   @column()
   public domain: string

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import UploadService from 'App/Services/UploadService'
 
 export default class DomainService {
   public static getDomaineName(domain: string): string | undefined {
@@ -19,5 +20,14 @@ export default class DomainService {
       favicon: data,
       contentType: headers['content-type'],
     }
+  }
+
+  public static async uploadDomainFavicon(domain: string): Promise<string | null> {
+    const { favicon, contentType } = await this.getDomainFavicon(domain)
+    if (favicon) {
+      const domainName = this.getDomaineName(domain)
+      return await UploadService.uploadImage(favicon, contentType, domainName)
+    }
+    return null
   }
 }
