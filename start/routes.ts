@@ -5,7 +5,6 @@ Route.get('/', async () => {
   return { success: true, version: 2 }
 })
 
-
 Route.post('/event', 'DataController.collectVisitorData')
 
 Route.get('/projects', 'ProjectsController.index')

@@ -8,6 +8,7 @@ export default class extends BaseSchema {
       table.increments()
       table.string('domain').notNullable().unique()
       table.string('favicon').nullable()
+      table.boolean('active').defaultTo(false)
       table.timestamps(true, true)
     })
   }

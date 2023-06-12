@@ -12,6 +12,9 @@ export default class Project extends BaseModel {
   @column()
   public domain: string
 
+  @column()
+  public active: boolean
+
   @hasMany(() => VisitorEvent)
   public visitorEvents: HasMany<typeof VisitorEvent>
 

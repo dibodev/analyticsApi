@@ -5,6 +5,7 @@ import * as crypto from 'crypto'
 import UAParser from 'ua-parser-js'
 import geoip from 'geoip-lite'
 import type { GeoInfo } from 'geoip-lite'
+import ProjectsService from 'App/Services/ProjectsService'
 
 interface VisitorData {
   userAgent: string
@@ -48,6 +49,13 @@ export default class DataService {
       referrer: data.data.referrer,
       url,
     })
+
+    const project = await ProjectsService.getById(data.projectId)
+
+    if (project) {
+      project.active = true
+      await project.save()
+    }
 
     return {
       visitorId: visitor.visitorId,
