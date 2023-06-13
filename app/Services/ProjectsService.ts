@@ -1,9 +1,23 @@
 import Project from 'App/Models/Project'
 import DomainService from 'App/Services/DomainService'
+import VisitorService from 'App/Services/VisitorService'
 
 export default class ProjectsService {
   public static async getAll() {
     return await Project.all()
+  }
+
+  public static async getAllWithVisitorCount(): Promise<
+    { project: Project; visitorLast24Hours: number }[]
+  > {
+    const projects = await this.getAll()
+
+    return await Promise.all(
+      projects.map(async (project) => {
+        const visitorLast24Hours = await VisitorService.getVisitorCountLast24Hours(project.id)
+        return { project, visitorLast24Hours }
+      })
+    )
   }
 
   public static async create(domain: string) {

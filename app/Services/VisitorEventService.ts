@@ -2,7 +2,6 @@ import VisitorEvent from 'App/Models/VisitorEvent'
 
 export interface VisitorEventCommand {
   visitorId: number
-  projectId: number
   browser: string | null
   os: string | null
   deviceType: string | undefined

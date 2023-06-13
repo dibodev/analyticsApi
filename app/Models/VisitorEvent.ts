@@ -3,7 +3,6 @@ import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 import type { BelongsTo } from '@ioc:Adonis/Lucid/Orm'
 import { belongsTo } from '@adonisjs/lucid/build/src/Orm/Decorators'
 import Visitor from 'App/Models/Visitor'
-import Project from 'App/Models/Project'
 
 export default class VisitorEvent extends BaseModel {
   @column({ isPrimary: true })
@@ -11,9 +10,6 @@ export default class VisitorEvent extends BaseModel {
 
   @column()
   public visitorId: number
-
-  @column()
-  public projectId: number
 
   @column()
   public browser: string | null
@@ -32,9 +28,6 @@ export default class VisitorEvent extends BaseModel {
 
   @belongsTo(() => Visitor)
   public visitor: BelongsTo<typeof Visitor>
-
-  @belongsTo(() => Project)
-  public project: BelongsTo<typeof Project>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

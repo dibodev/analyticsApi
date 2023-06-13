@@ -5,7 +5,7 @@ import UpdateProjectValidator from 'App/Validators/UpdateProjectValidator'
 
 export default class ProjectsController {
   protected async index({}: HttpContextContract) {
-    return await ProjectsService.getAll()
+    return await ProjectsService.getAllWithVisitorCount()
   }
 
   protected async store({ request }: HttpContextContract) {

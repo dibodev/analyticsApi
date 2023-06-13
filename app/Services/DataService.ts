@@ -31,10 +31,10 @@ export default class DataService {
     const salt = await DailySaltService.getSalt()
     const visitorId = crypto
       .createHash('sha256')
-      .update(`${salt}${websiteDomain}${clientIp}${data.data.userAgent}`)
+      .update(`${salt}${websiteDomain}${clientIp}${data.data.userAgent}${data.projectId}`)
       .digest('hex')
 
-    const visitor = await VisitorService.findOrCreate(visitorId, geo)
+    const visitor = await VisitorService.findOrCreate(visitorId, data.projectId, geo)
 
     if (!visitor) {
       throw new Error('Visitor could not be created')
@@ -42,7 +42,6 @@ export default class DataService {
 
     const visitorEvent = await VisitorEventService.create({
       visitorId: visitor.id,
-      projectId: data.projectId,
       browser: browserName,
       os: osName,
       deviceType,
