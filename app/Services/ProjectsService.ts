@@ -7,6 +7,14 @@ export default class ProjectsService {
     return await Project.all()
   }
 
+  public static async getById(id: number) {
+    return await Project.findOrFail(id)
+  }
+
+  public static async getByDomain(domain: string) {
+    return await Project.query().where('domain', domain).firstOrFail()
+  }
+
   public static async getAllWithVisitorCount(): Promise<
     { project: Project; visitorLast24Hours: number }[]
   > {
@@ -28,10 +36,6 @@ export default class ProjectsService {
       console.error('Error retrieving favicon:', error)
       return await Project.create({ domain })
     }
-  }
-
-  public static async getById(id: number) {
-    return await Project.findOrFail(id)
   }
 
   public static async update(id: number, domain?: string) {

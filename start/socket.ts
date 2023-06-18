@@ -7,4 +7,8 @@ SocketIoService.boot()
  */
 SocketIoService.io.on('connection', (socket) => {
   socket.emit('news', { hello: 'world' })
+
+  socket.on('join', (room: string) => {
+    socket.join(room)
+  })
 })

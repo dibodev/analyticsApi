@@ -5,11 +5,9 @@ export default class DataValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({
-    projectId: schema.number(),
-    data: schema.object().members({
-      userAgent: schema.string(),
-      url: schema.string(),
-      referrer: schema.string.nullable(),
-    }),
+    url: schema.string(),
+    referrer: schema.string.nullable(),
+    domain: schema.string(),
+    userAgent: schema.string.nullable(),
   })
 }

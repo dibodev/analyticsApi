@@ -1,18 +1,24 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import DataService from 'App/Services/DataService'
 import DataValidator from 'App/Validators/DataValidator'
-import axios from 'axios'
+import IPService from 'App/Services/IPService'
 
 export default class DataController {
   public async collectVisitorData({ request }: HttpContextContract) {
     const data = await request.validate(DataValidator)
-    let clientIp = request.ip()
+    const userAgent = data.userAgent || request.header('User-Agent') || ''
 
-    if (process.env.NODE_ENV === 'development') {
-      const response = await axios.get('https://api.myip.com')
-      clientIp = response.data.ip
-    }
+    const clientIp = await IPService.getClientIp(request.ip())
 
-    return await DataService.collectVisitorData(clientIp, data)
+    return await DataService.collectVisitorData(clientIp, { ...data, userAgent })
+  }
+  public async leave({ request, response }: HttpContextContract) {
+    const data = await request.validate(DataValidator)
+    const userAgent = data.userAgent || request.header('User-Agent') || ''
+
+    const clientIp = await IPService.getClientIp(request.ip())
+
+    await DataService.leave(clientIp, { ...data, userAgent })
+    response.send({ success: true })
   }
 }
