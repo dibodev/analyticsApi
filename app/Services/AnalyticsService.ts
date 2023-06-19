@@ -116,7 +116,7 @@ export default class AnalyticsService {
       (sum, session) => sum + (session.visitDuration || 0),
       0
     )
-    return sessions.length ? totalVisitDuration / sessions.length : 0
+    return roundToTwoDecimals(sessions.length ? totalVisitDuration / sessions.length : 0)
   }
 
   private static async getBounceRate(
