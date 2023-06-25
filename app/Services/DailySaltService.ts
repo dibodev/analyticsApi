@@ -15,6 +15,7 @@ export default class DailySaltService {
   }
 
   public static async create(): Promise<DailySalt> {
+    await this.deleteOldestSalt()
     const salt = crypto.randomBytes(64).toString('hex')
     return await DailySalt.create({ salt })
   }

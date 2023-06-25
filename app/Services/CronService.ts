@@ -9,7 +9,6 @@ export default class CronService {
   public static refreshDailySalt() {
     cron.schedule('0 0 * * *', async () => {
       await DailySaltService.create()
-      await DailySaltService.deleteOldestSalt()
       const salt = await DailySaltService.getSalt()
       Logger.info(`Daily salt refreshed: ${salt}`)
     })
