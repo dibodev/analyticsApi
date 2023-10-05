@@ -3,11 +3,11 @@ import DomainService from 'App/Services/DomainService'
 import VisitorService from 'App/Services/VisitorService'
 
 export default class ProjectsService {
-  public static async getAll() {
+  public static async getAll(): Promise<Project[]> {
     return await Project.all()
   }
 
-  public static async getById(id: number) {
+  public static async getById(id: number): Promise<Project> {
     return await Project.findOrFail(id)
   }
 
@@ -28,21 +28,17 @@ export default class ProjectsService {
     )
   }
 
-  public static async create(domain: string) {
+  public static async create(domain: string): Promise<Project> {
     try {
-      const favicon = await DomainService.uploadDomainFavicon(domain)
-      return favicon
-      // return await Project.create({ domain, favicon })
+      const favicon: string | null = await DomainService.uploadDomainFavicon(domain)
+      return await Project.create({ domain, favicon })
     } catch (error) {
-      return {
-        error,
-      }
-      // console.error('Error retrieving favicon:', error)
-      // return await Project.create({ domain })
+      console.error('Error retrieving favicon:', error)
+      return await Project.create({ domain })
     }
   }
 
-  public static async update(id: number, domain?: string) {
+  public static async update(id: number, domain?: string): Promise<Project> {
     const project = await Project.findOrFail(id)
     if (domain) {
       project.domain = domain
@@ -60,7 +56,7 @@ export default class ProjectsService {
     return project
   }
 
-  public static async delete(id: number) {
+  public static async delete(id: number): Promise<void> {
     const project = await Project.findOrFail(id)
     await project.delete()
   }

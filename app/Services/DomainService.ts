@@ -15,28 +15,26 @@ export default class DomainService {
   }
   public static async getDomainFavicon(domain: string) {
     const faviconUrl = `https://icons.duckduckgo.com/ip3/${domain}.ico`
-    const { data, headers } = await axios.get(faviconUrl, { responseType: 'arraybuffer' })
+
+    const axiosInstance = axios.create({
+      httpsAgent: new (require('https').Agent)({
+        rejectUnauthorized: false,
+      }),
+    })
+
+    const { data, headers } = await axiosInstance.get(faviconUrl, { responseType: 'arraybuffer' })
     return {
       favicon: data,
       contentType: headers['content-type'],
     }
   }
 
-  public static async uploadDomainFavicon(domain: string): Promise<any | null> {
+  public static async uploadDomainFavicon(domain: string): Promise<string | null> {
     const { favicon, contentType } = await this.getDomainFavicon(domain)
     if (favicon) {
       const domainName = this.getDomaineName(domain)
-      const res = await UploadService.uploadImage(favicon, contentType, domainName)
-      return {
-        res,
-        favicon,
-        contentType,
-        domainName,
-      }
+      return await UploadService.uploadImage(favicon, contentType, domainName)
     }
-    return {
-      favicon,
-      contentType,
-    }
+    return null
   }
 }
