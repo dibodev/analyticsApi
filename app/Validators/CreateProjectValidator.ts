@@ -6,7 +6,6 @@ export default class CreateProjectValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({
-    favicon: schema.string.optional(),
     domain: schema.string({}, [rules.unique({ table: 'projects', column: 'domain' })]),
   })
 

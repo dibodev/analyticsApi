@@ -1,0 +1,47 @@
+components:
+  schemas:
+    Visitor_post_request:
+      type: object
+      properties:
+        visitorId:
+          type: string
+          example: 'v1234567'
+        projectId:
+          type: number
+          example: 1
+        locationId:
+          type: number
+          example: 2
+          nullable: true
+    Visitor_get_return:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 10
+        visitorId:
+          type: string
+          example: 'v1234567'
+        projectId:
+          type: number
+          example: 1
+        locationId:
+          type: number
+          example: 2
+          nullable: true
+        location:
+          $ref: '#/components/schemas/Location_get_return'
+        visitorEvents:
+          type: array
+          items:
+            $ref: '#/components/schemas/VisitorEvent_get_return'
+        project:
+          $ref: '#/components/schemas/Project_get_return'
+        createdAt:
+          type: string
+          format: date-time
+          example: '2023-08-01T13:48:18.239+00:00'
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2023-08-01T13:48:18.239+00:00'

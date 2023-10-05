@@ -1,0 +1,42 @@
+components:
+  schemas:
+    Location_post_request:
+      type: object
+      properties:
+        country:
+          type: string
+          example: 'France'
+        region:
+          type: string
+          example: 'Île-de-France'
+        city:
+          type: string
+          example: 'Paris'
+
+    Location_get_return:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        country:
+          type: string
+          example: 'France'
+        region:
+          type: string
+          example: 'Île-de-France'
+        city:
+          type: string
+          example: 'Paris'
+        visitors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Visitor_get_return'
+        createdAt:
+          type: string
+          format: date-time
+          example: '2023-08-01T13:48:18.239+00:00'
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2023-08-01T13:48:18.239+00:00'

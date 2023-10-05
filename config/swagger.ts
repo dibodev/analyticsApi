@@ -16,7 +16,7 @@ export default {
     definition: {
       openapi: '3.0.0',
       info: {
-        title: 'CrzGames - API Documentation',
+        title: 'Dibodev Analytics - API Documentation',
         version: packageJson.version,
       },
     },
