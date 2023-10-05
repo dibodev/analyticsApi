@@ -11,6 +11,8 @@
     "lint:prettier": "prettier --check .",
     "lint:ts": "node ace type-check",
     "lintfix": "prettier --write --list-different . && npm run lint:prettier --fix && npm run lint:ts --fix",
+    "adonis:swagger:generate": "node ace swagger:generate",
+    "postbuild": "npm run adonis:swagger:generate && cp -a docs/swagger build/docs",
     "postinstall": "husky install"
   },
   "devDependencies": {
@@ -39,6 +41,7 @@
     "@adonisjs/lucid": "^18.4.0",
     "@adonisjs/repl": "^3.1.11",
     "@adonisjs/view": "^6.2.0",
+    "adonis5-swagger": "^1.4.1",
     "geoip-lite": "^1.4.7",
     "luxon": "^3.3.0",
     "mysql2": "^3.3.3",

@@ -1,0 +1,61 @@
+components:
+  schemas:
+    Item_post_request:
+      type: object
+      properties:
+        gameId:
+          type: number
+          example: 2
+        itemName:
+          type: string
+          example: 'Epée de feu'
+        price:
+          type: number
+          example: 23.30
+        description:
+          type: string
+          example: 'Il s''agit d''une épée qui est enflammé'
+        durationValidityDays:
+          type: number
+          example: 30
+        expireDateOffer:
+          type: string
+          example: '2023-07-24T14:32:04.367+00:00'
+        itemImage:
+          type: string
+          example: 'https://url.test.com'
+
+    Item_get_return:
+      type: object
+      properties:
+        game_id:
+          type: number
+          example: 2
+        item_name:
+          type: string
+          example: 'Epée de feu'
+        price:
+          type: number
+          example: 23.30
+        description:
+          type: string
+          example: 'Il s agit d''une épée qui est enflammé'
+        duration_validity_days:
+          type: number
+          example: 30
+        expire_date_offer:
+          type: string
+          example: '2023-07-24T14:32:04.367+00:00'
+        item_image:
+          type: string
+          example: 'https://url.test.com'
+        created_at:
+          type: string
+          example: '2023-08-01T13:48:18.239+00:00'
+        updated_at:
+          type: string
+          example: '2023-08-01T13:48:18.239+00:00'
+        id:
+          type: number
+          example: 5
+

@@ -1,0 +1,132 @@
+paths:
+  /item:
+    post:
+      tags:
+        - Item
+      summary: Create a new item
+      description: Create a new item
+      operationId: createItem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item_post_request'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item_get_return'
+
+  /items:
+    get:
+      tags:
+        - Item
+      summary: Get all items
+      description: Get all items
+      operationId: getAllItems
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item_get_return'
+
+  /items/{gameId}:
+    get:
+      tags:
+        - Item
+      summary: Get all items from a game
+      description: Get all items from a game
+      operationId: getAllItemsFromGame
+      parameters:
+        - name: gameId
+          in: path
+          description: id of game
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item_get_return'
+
+  /item/{id}:
+    get:
+      tags:
+        - Item
+      summary: Get an item by id
+      description: Get an item by id
+      operationId: getItemById
+      parameters:
+        - name: id
+          in: path
+          description: id of item
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item_get_return'
+        '404':
+          description: Item not found
+
+    put:
+      tags:
+        - Item
+      summary: Update an item by id
+      description: Update an item by id
+      operationId: updateItemById
+      parameters:
+        - name: id
+          in: path
+          description: id of item
+          required: true
+          schema:
+            type: number
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item_post_request'
+      responses:
+        '200':
+          description: item updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item_get_return'
+        '404':
+          description: Item not found
+
+    delete:
+      tags:
+        - Item
+      summary: Delete an item by id
+      description: Delete an item by id
+      operationId: deleteItemById
+      parameters:
+        - name: id
+          in: path
+          description: id of item
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: item deleted
+        '404':
+          description: Item not found
