@@ -1,0 +1,10 @@
+{
+  "eslintConfig": {
+    "extends": ["plugin:adonis/typescriptApp", "prettier"],
+    "plugins": ["prettier"],
+    "rules": {
+      "prettier/prettier": ["error", { "endOfLine": "auto" }]
+    }
+  },
+  "eslintIgnore": ["build"]
+}

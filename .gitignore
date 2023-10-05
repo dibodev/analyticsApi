@@ -7,3 +7,4 @@ coverage
 .env.production
 tmp
 .idea
+public/*.ico
