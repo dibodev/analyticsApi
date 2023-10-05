@@ -31,10 +31,14 @@ export default class ProjectsService {
   public static async create(domain: string) {
     try {
       const favicon = await DomainService.uploadDomainFavicon(domain)
-      return await Project.create({ domain, favicon })
+      return favicon
+      // return await Project.create({ domain, favicon })
     } catch (error) {
-      console.error('Error retrieving favicon:', error)
-      return await Project.create({ domain })
+      return {
+        favicon: 'error',
+      }
+      // console.error('Error retrieving favicon:', error)
+      // return await Project.create({ domain })
     }
   }
 

@@ -22,12 +22,21 @@ export default class DomainService {
     }
   }
 
-  public static async uploadDomainFavicon(domain: string): Promise<string | null> {
+  public static async uploadDomainFavicon(domain: string): Promise<any | null> {
     const { favicon, contentType } = await this.getDomainFavicon(domain)
     if (favicon) {
       const domainName = this.getDomaineName(domain)
-      return await UploadService.uploadImage(favicon, contentType, domainName)
+      const res = await UploadService.uploadImage(favicon, contentType, domainName)
+      return {
+        res,
+        favicon,
+        contentType,
+        domainName,
+      }
     }
-    return null
+    return {
+      favicon,
+      contentType,
+    }
   }
 }
