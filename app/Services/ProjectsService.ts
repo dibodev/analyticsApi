@@ -35,7 +35,7 @@ export default class ProjectsService {
       // return await Project.create({ domain, favicon })
     } catch (error) {
       return {
-        favicon: 'error',
+        error,
       }
       // console.error('Error retrieving favicon:', error)
       // return await Project.create({ domain })
