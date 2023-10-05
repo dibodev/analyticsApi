@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "node ace serve --watch",
-    "build": "node ace build --production",
+    "build": "npm run lint:ts && node ace build --production",
     "start": "node server.js",
     "test": "node ace test",
     "format": "prettier --write .",
