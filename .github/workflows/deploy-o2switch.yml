@@ -27,7 +27,7 @@ jobs:
         run: npm run build
 
       - name: 🛁 Clean install a project
-        run: cd build && npm ci --production
+        run: cd build && npm ci --production --ignore-scripts
 
       - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
