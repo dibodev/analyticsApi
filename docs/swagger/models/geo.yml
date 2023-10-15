@@ -1,0 +1,41 @@
+components:
+  schemas:
+    Geo:
+      type: object
+      properties:
+        range:
+          type: array
+          items:
+            type: number
+          minItems: 2
+          maxItems: 2
+          example: [ 1, 65536 ]
+        country:
+          type: string
+          example: 'US'
+        region:
+          type: string
+          example: 'CA'
+        eu:
+          type: string
+          enum: [ '1', '0' ]
+          example: '1'
+        timezone:
+          type: string
+          example: 'America/Los_Angeles'
+        city:
+          type: string
+          example: 'Los Angeles'
+        ll:
+          type: array
+          items:
+            type: number
+          minItems: 2
+          maxItems: 2
+          example: [ 34.0522, -118.2437 ]
+        metro:
+          type: number
+          example: 803
+        area:
+          type: number
+          example: 50

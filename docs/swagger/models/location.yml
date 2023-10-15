@@ -13,7 +13,7 @@ components:
           type: string
           example: 'Paris'
 
-    Location_get_return:
+    Location:
       type: object
       properties:
         id:
@@ -31,7 +31,7 @@ components:
         visitors:
           type: array
           items:
-            $ref: '#/components/schemas/Visitor_get_return'
+            $ref: '#/components/schemas/Visitor'
         createdAt:
           type: string
           format: date-time

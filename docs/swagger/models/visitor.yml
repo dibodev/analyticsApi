@@ -13,7 +13,7 @@ components:
           type: number
           example: 2
           nullable: true
-    Visitor_get_return:
+    Visitor:
       type: object
       properties:
         id:
@@ -30,13 +30,13 @@ components:
           example: 2
           nullable: true
         location:
-          $ref: '#/components/schemas/Location_get_return'
+          $ref: '#/components/schemas/Location'
         visitorEvents:
           type: array
           items:
-            $ref: '#/components/schemas/VisitorEvent_get_return'
+            $ref: '#/components/schemas/VisitorEvent'
         project:
-          $ref: '#/components/schemas/Project_get_return'
+          $ref: '#/components/schemas/Project'
         createdAt:
           type: string
           format: date-time

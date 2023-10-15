@@ -4,7 +4,6 @@ services:
   db:
     container_name: db
     image: mariadb:latest
-    restart: always
     env_file:
       - .env
     ports:
@@ -17,7 +16,6 @@ services:
     image: phpmyadmin/phpmyadmin
     env_file:
       - .env
-    restart: always
     ports:
       - "8080:80"
 volumes:
