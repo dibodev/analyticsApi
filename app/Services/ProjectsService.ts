@@ -11,7 +11,7 @@ export default class ProjectsService {
     return await Project.findOrFail(id)
   }
 
-  public static async getByDomain(domain: string) {
+  public static async getByDomain(domain: string): Promise<Project> {
     return await Project.query().where('domain', domain).firstOrFail()
   }
 
@@ -31,10 +31,12 @@ export default class ProjectsService {
   public static async create(domain: string): Promise<Project> {
     try {
       const favicon: string | null = await DomainService.uploadDomainFavicon(domain)
-      return await Project.create({ domain, favicon })
+      const project = await Project.create({ domain, favicon })
+      return await Project.findOrFail(project.id)
     } catch (error) {
       console.error('Error retrieving favicon:', error)
-      return await Project.create({ domain })
+      const project = await Project.create({ domain })
+      return await Project.findOrFail(project.id)
     }
   }
 

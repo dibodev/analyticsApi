@@ -1,0 +1,34 @@
+components:
+  schemas:
+    Session:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        visitor_id:
+          type: number
+          example: 123456
+        active:
+          type: boolean
+          example: true
+        session_start:
+          type: string
+          format: date-time
+          example: '2023-08-01T13:48:18.239+00:00'
+        session_end:
+          type: string
+          format: date-time
+          nullable: true
+        visit_duration:
+          type: number
+          example: 123456
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          example: '2023-08-01T13:48:18.239+00:00'
+        created_at:
+          type: string
+          format: date-time
+          example: '2023-08-01T13:48:18.239+00:00'

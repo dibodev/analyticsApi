@@ -1,0 +1,47 @@
+components:
+  schemas:
+    CreateProject:
+      type: object
+      properties:
+        domain:
+          type: string
+          example: 'example.com'
+    UpdateProject:
+      type: object
+      properties:
+        domain:
+          type: string
+          example: 'example.com'
+    Project:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        domain:
+          type: string
+          example: 'example.com'
+        favicon:
+          type: string
+          example: 'https://example.com/favicon.png'
+        active:
+          type: boolean
+          example: true
+        created_at:
+          type: string
+          format: date-time
+          example: '2023-08-01T13:48:18.239+00:00'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2023-08-01T13:48:18.239+00:00'
+    Projects:
+      type: array
+      items:
+        type: object
+        properties:
+          project:
+            $ref: '#/components/schemas/Project'
+          visitorLast24Hours:
+            type: number
+            example: 100

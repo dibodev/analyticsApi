@@ -1,0 +1,66 @@
+components:
+  schemas:
+    VisitorEvent_post_request:
+      type: object
+      properties:
+        visitorId:
+          type: number
+          example: 1
+        browser:
+          type: string
+          example: 'Chrome'
+          nullable: true
+        os:
+          type: string
+          example: 'Windows'
+          nullable: true
+        url:
+          type: string
+          example: 'https://example.com/page1'
+          nullable: true
+        deviceType:
+          type: string
+          example: 'Desktop'
+          nullable: true
+        referrer:
+          type: string
+          example: 'https://google.com'
+          nullable: true
+
+    VisitorEvent:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 10
+        visitor_id:
+          type: number
+          example: 1
+        browser:
+          type: string
+          example: 'Chrome'
+          nullable: true
+        os:
+          type: string
+          example: 'Windows'
+          nullable: true
+        device_type:
+          type: string
+          example: 'desktop'
+          nullable: true
+        url:
+          type: string
+          example: 'https://example.com/page1'
+          nullable: true
+        referrer:
+          type: string
+          example: 'https://google.com'
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          example: '2023-08-01T13:48:18.239+00:00'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2023-08-01T13:48:18.239+00:00'

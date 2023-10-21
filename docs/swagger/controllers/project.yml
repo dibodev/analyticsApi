@@ -1,0 +1,105 @@
+paths:
+  /projects:
+    get:
+      tags:
+        - Project
+      summary: Get all projects
+      description: Get all projects with visitor count in the last 24 hours
+      operationId: getAllProjects
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/Projects'
+
+    post:
+      tags:
+        - Project
+      summary: Create a new project
+      description: Create a new project
+      operationId: createProject
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProject'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+
+  /projects/{id}:
+    get:
+      tags:
+        - Project
+      summary: Get a project by id
+      description: Get a project by id
+      operationId: getProjectById
+      parameters:
+        - name: id
+          in: path
+          description: id of project
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '404':
+          description: Project not found
+
+    put:
+      tags:
+        - Project
+      summary: Update a project by id
+      description: Update a project by id
+      operationId: updateProjectById
+      parameters:
+        - name: id
+          in: path
+          description: id of project
+          required: true
+          schema:
+            type: number
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProject'
+      responses:
+        '200':
+          description: Project updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '404':
+          description: Project not found
+
+    delete:
+      tags:
+        - Project
+      summary: Delete a project by id
+      description: Delete a project by id
+      operationId: deleteProjectById
+      parameters:
+        - name: id
+          in: path
+          description: id of project
+          required: true
+          schema:
+            type: number
+      responses:
+        '204':
+          description: Project deleted
+        '404':
+          description: Project not found

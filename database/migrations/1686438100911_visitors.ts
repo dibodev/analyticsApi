@@ -7,8 +7,8 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments()
       table.string('visitor_id').notNullable().unique()
-      table.integer('project_id').unsigned().references('projects.id')
-      table.integer('location_id').unsigned().references('locations.id')
+      table.integer('project_id').unsigned().references('projects.id').onDelete('CASCADE')
+      table.integer('location_id').unsigned().references('locations.id').onDelete('CASCADE')
       table.timestamps(true, true)
     })
   }
