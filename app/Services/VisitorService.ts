@@ -7,6 +7,11 @@ import crypto from 'crypto'
 import Location from 'App/Models/Location'
 import Project from 'App/Models/Project'
 
+export type PeriodFilter = {
+  startAt: DateTime
+  endAt: DateTime
+}
+
 export default class VisitorService {
   public static async findOrCreate(
     visitorId: string,
@@ -27,7 +32,7 @@ export default class VisitorService {
 
   public static async getVisitorsByProjectId(
     projectId: number,
-    period?: { startAt: DateTime; endAt: DateTime }
+    period?: PeriodFilter
   ): Promise<Visitor[]> {
     let visitors = Visitor.query().where('project_id', projectId)
 
@@ -42,6 +47,12 @@ export default class VisitorService {
 
     return visitors
   }
+
+  public static async getVisitorCount(projectId: number, period?: PeriodFilter): Promise<number> {
+    const visitors = await this.getVisitorsByProjectId(projectId, period)
+    return visitors.length
+  }
+
   public static async create(
     visitorId: string,
     domain: string,

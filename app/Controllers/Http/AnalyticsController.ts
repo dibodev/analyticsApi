@@ -1,6 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import AnalyticsService from 'App/Services/AnalyticsService'
 import { DateTime } from 'luxon'
+import AnalyticsLocationService from 'App/Services/AnalyticsLocationService'
 
 export default class AnalyticsController {
   public async stats({ request, params }: HttpContextContract) {
@@ -12,6 +13,12 @@ export default class AnalyticsController {
       domain: params.domain,
       period,
       endAt: date,
+    })
+  }
+
+  public async countries({ params }: HttpContextContract) {
+    return AnalyticsLocationService.getProjectCountries({
+      domain: params.domain,
     })
   }
 }

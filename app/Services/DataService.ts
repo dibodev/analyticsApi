@@ -39,6 +39,15 @@ export default class DataService {
     const osName: string | null = uaParser.getOS().name || null
     const deviceType: string = uaParser.getDevice().type || 'desktop'
     const geo: Lookup = geoip.lookup(clientIp) as Lookup
+
+    console.log({
+      clientIp,
+      data,
+      geo,
+      browserName,
+      osName,
+      deviceType,
+    })
     const url: string = data.url
     const userAgent: string = data.userAgent
 

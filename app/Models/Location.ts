@@ -16,6 +16,9 @@ export default class Location extends BaseModel {
   @column()
   public city: string
 
+  @column()
+  public alpha_3: string | null
+
   @hasMany(() => Visitor)
   public visitors: HasMany<typeof Visitor>
 
