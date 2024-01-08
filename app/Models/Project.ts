@@ -12,7 +12,11 @@ export default class Project extends BaseModel {
   @column()
   public domain: string
 
-  @column()
+  @column({
+    serialize: (value: number) => {
+      return Boolean(value)
+    },
+  })
   public active: boolean
 
   @hasMany(() => VisitorEvent)

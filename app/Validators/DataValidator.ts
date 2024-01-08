@@ -1,6 +1,13 @@
 import { schema } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
+export interface DataValidatorInterface {
+  url: string
+  referrer: string | null
+  domain: string
+  userAgent: string | null
+}
+
 export default class DataValidator {
   constructor(protected ctx: HttpContextContract) {}
 

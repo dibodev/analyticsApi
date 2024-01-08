@@ -1,0 +1,21 @@
+paths:
+  /stats/{domain}/top-stats:
+    get:
+      tags:
+        - Stats
+      summary: Get top stats for a specific domain
+      parameters:
+        - name: domain
+          in: path
+          description: Domain name to get stats for
+          required: true
+          schema:
+            type: string
+            example: "dibodev.com"
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatsResponse'

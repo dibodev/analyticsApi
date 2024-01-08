@@ -9,6 +9,7 @@ export default class extends BaseSchema {
       table.string('country').notNullable()
       table.string('region').notNullable()
       table.string('city').notNullable()
+      table.string('alpha_3').nullable()
       table.unique(['country', 'region', 'city']) // Add unique constraint
       table.timestamps(true, true)
     })

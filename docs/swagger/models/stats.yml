@@ -1,0 +1,56 @@
+components:
+  schemas:
+    TopStat:
+      type: object
+      properties:
+        change:
+          type: number
+          nullable: true
+          example: 24
+        comparison_value:
+          type: number
+          nullable: true
+          example: 142119
+        name:
+          type: string
+          example: "Unique visitors"
+        value:
+          type: number
+          example: 176140
+    StatsResponse:
+      type: object
+      properties:
+        comparing_from:
+          type: string
+          format: date
+          nullable: true
+          example: "2023-08-07"
+        comparing_to:
+          type: string
+          format: date
+          nullable: true
+          example: "2023-09-06"
+        from:
+          type: string
+          format: date
+          example: "2023-09-04"
+        imported_source:
+          type: string
+          nullable: true
+        interval:
+          type: string
+          example: "date"
+        sample_percent:
+          type: number
+          example: 100
+        to:
+          type: string
+          format: date
+          example: "2023-10-04"
+        top_stats:
+          type: array
+          items:
+            $ref: '#/components/schemas/TopStat'
+        with_imported:
+          type: boolean
+          example: false

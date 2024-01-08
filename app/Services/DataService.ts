@@ -2,34 +2,65 @@ import VisitorService from 'App/Services/VisitorService'
 import VisitorEventService from 'App/Services/VisitorEventService'
 import DailySaltService from 'App/Services/DailySaltService'
 import UAParser from 'ua-parser-js'
+import type { UAParserInstance } from 'ua-parser-js'
 import geoip from 'geoip-lite'
-import type { GeoInfo } from 'geoip-lite'
+import type { Lookup } from 'geoip-lite'
 import ProjectsService from 'App/Services/ProjectsService'
 import AnalyticsService from 'App/Services/AnalyticsService'
 import SessionService from 'App/Services/SessionService'
+import Visitor from 'App/Models/Visitor'
+import Session from 'App/Models/Session'
+import VisitorEvent from 'App/Models/VisitorEvent'
+import Project from 'App/Models/Project'
 
-interface EventData {
+export interface EventData {
   userAgent: string
   url: string
   referrer: string | null
   domain: string
 }
 
+export interface VisitorData {
+  visitorId: string
+  event: VisitorEvent
+  session: Session
+  browserName: string | null
+  osName: string | null
+  deviceType: string
+  geo: Lookup
+  referrer: string | null
+  url: string
+}
+
 export default class DataService {
-  public static async collectVisitorData(clientIp: string, data: EventData) {
-    const uaParser = new UAParser(data.userAgent)
-    const browserName = uaParser.getBrowser().name
-    const osName = uaParser.getOS().name
-    const deviceType = uaParser.getDevice().type || 'desktop'
-    const geo = geoip.lookup(clientIp) as GeoInfo
-    const url = data.url
-    const userAgent = data.userAgent
+  public static async collectVisitorData(clientIp: string, data: EventData): Promise<VisitorData> {
+    const uaParser: UAParserInstance = new UAParser(data.userAgent)
+    const browserName: string | null = uaParser.getBrowser().name || null
+    const osName: string | null = uaParser.getOS().name || null
+    const deviceType: string = uaParser.getDevice().type || 'desktop'
+    const geo: Lookup = geoip.lookup(clientIp) as Lookup
 
-    const salt = await DailySaltService.getSalt()
+    console.log({
+      clientIp,
+      data,
+      geo,
+      browserName,
+      osName,
+      deviceType,
+    })
+    const url: string = data.url
+    const userAgent: string = data.userAgent
 
-    const visitorId = await VisitorService.generateVisitorId(salt, data.domain, clientIp, userAgent)
+    const salt: string = await DailySaltService.getSalt()
 
-    const visitor = await VisitorService.findOrCreate(visitorId, data.domain, geo)
+    const visitorId: string = await VisitorService.generateVisitorId(
+      salt,
+      data.domain,
+      clientIp,
+      userAgent
+    )
+
+    const visitor: Visitor = await VisitorService.findOrCreate(visitorId, data.domain, geo)
 
     AnalyticsService.addVisitor(data.domain, visitorId)
     AnalyticsService.emitVisitorCountForProject(data.domain)
@@ -38,9 +69,9 @@ export default class DataService {
       throw new Error('Visitor could not be created')
     }
 
-    const session = await SessionService.findOrCreate(visitor.id)
+    const session: Session = await SessionService.findOrCreate(visitor.id)
 
-    const visitorEvent = await VisitorEventService.create({
+    const visitorEvent: VisitorEvent = await VisitorEventService.create({
       visitorId: visitor.id,
       browser: browserName,
       os: osName,
@@ -49,7 +80,7 @@ export default class DataService {
       url,
     })
 
-    const project = await ProjectsService.getByDomain(data.domain)
+    const project: Project = await ProjectsService.getByDomain(data.domain)
 
     if (project) {
       project.active = true
@@ -68,10 +99,10 @@ export default class DataService {
       url,
     }
   }
-  public static async leave(clientIp: string, data: EventData) {
-    const salt = await DailySaltService.getSalt()
+  public static async leave(clientIp: string, data: EventData): Promise<void> {
+    const salt: string = await DailySaltService.getSalt()
 
-    const visitorId = await VisitorService.generateVisitorId(
+    const visitorId: string = await VisitorService.generateVisitorId(
       salt,
       data.domain,
       clientIp,

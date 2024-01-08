@@ -1,0 +1,42 @@
+paths:
+  /event:
+    post:
+      tags:
+        - Event
+      summary: Collect visitor data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event_post_request'
+      responses:
+        '200':
+          description: Data collected successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+
+  /leave:
+    post:
+      tags:
+        - Event
+      summary: Handle visitor leave action
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event_post_request'
+      responses:
+        '200':
+          description: Operation successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true

@@ -11,7 +11,11 @@ export default class Session extends BaseModel {
   @column()
   public visitorId: number
 
-  @column()
+  @column({
+    serialize: (value: number) => {
+      return Boolean(value)
+    },
+  })
   public active: boolean
 
   @column.dateTime({ autoCreate: true })

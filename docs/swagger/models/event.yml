@@ -1,0 +1,48 @@
+components:
+  schemas:
+    Event_post_request:
+      type: object
+      properties:
+        url:
+          type: string
+          example: 'https://example.com'
+        referrer:
+          type: string
+          nullable: true
+          example: 'https://google.com'
+        domain:
+          type: string
+          example: 'example.com'
+        userAgent:
+          type: string
+          example: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4585.0 Safari/537.36'
+    Event:
+      type: object
+      properties:
+        visitorId:
+          type: string
+          example: '7d789b96c4c328abe8c53099668a93e202bf54a7d6391276f361ffa06e4f0638'
+        event:
+          $ref: '#/components/schemas/VisitorEvent'
+        session:
+          $ref: '#/components/schemas/Session'
+        browserName:
+          type: string
+          nullable: true
+          example: 'Chrome'
+        osName:
+          type: string
+          nullable: true
+          example: 'Windows'
+        deviceType:
+          type: string
+          example: 'Desktop'
+        geo:
+          $ref: '#/components/schemas/Geo'
+        referrer:
+          type: string
+          nullable: true
+          example: 'https://google.com'
+        url:
+          type: string
+          example: 'https://example.com'

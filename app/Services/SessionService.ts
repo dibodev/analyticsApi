@@ -20,7 +20,7 @@ export default class SessionService {
     // Set endAt to the end of the day
     const endOfDay = period.endAt.set({ hour: 23, minute: 59, second: 59 })
 
-    return await Session.query()
+    return Session.query()
       .preload('visitor', (visitorQuery) => {
         visitorQuery.where('project_id', projectId)
       })

@@ -1,0 +1,14 @@
+paths:
+  /analytics.js:
+    get:
+      tags:
+        - AnalyticsScript
+      summary: Retrieves the analytics script
+      responses:
+        200:
+          description: Analytics script returned successfully
+          content:
+            application/javascript:
+              schema:
+                type: string
+                format: binary
