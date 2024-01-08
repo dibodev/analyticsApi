@@ -42,7 +42,9 @@ jobs:
           echo "BASE_URL=https://analytics.dibodev.com" >> .env
 
       - name: 🧱 Build application
-        run: npm run build
+        run: |
+          npm run build
+          cp .env build/.env
 
       - name: 🛁 Clean install for production
         run: cd build && npm ci --production --ignore-scripts
