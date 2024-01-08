@@ -10,7 +10,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    env:
+      APP_DIR: /var/www/analytics.dibodev.com
     steps:
       - name: 🚚 Get latest code
         uses: actions/checkout@v4
@@ -54,7 +55,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "./build/"
-          target: "/var/www/analytics.dibodev.com"
+          target: ${{ env.APP_DIR }}/html
 
       - name: 🚀 Restart API with PM2, Run Migrations and Seeders
         uses: appleboy/ssh-action@master
@@ -64,8 +65,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /var/www/analytics.dibodev.com
             pm2 restart analytics.dibodev.com || pm2 start server.js --name analytics.dibodev.com
-            cd /var/www/analytics.dibodev.com
+            cd ${{ env.APP_DIR }}/html/build
             node ace migration:run --force
             node ace db:seed
