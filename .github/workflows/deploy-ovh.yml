@@ -10,7 +10,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    env:
+      APP_DIR: /var/www/analytics.dibodev.com
     steps:
       - name: 🚚 Get latest code
         uses: actions/checkout@v4
@@ -23,28 +24,29 @@ jobs:
       - name: 🔍 Install dependencies
         run: npm install
 
-      - name: 🧱 Build application
-        run: npm run build
-
-      - name: 🛁 Clean install for production
-        run: cd build && npm ci --production --ignore-scripts
-
       - name: 📝 Create .env file
         run: |
-          echo "PORT=3333" >> .env
+          echo "PORT=3333" > .env
           echo "HOST=0.0.0.0" >> .env
           echo "NODE_ENV=production" >> .env
           echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env
           echo "DRIVE_DISK=local" >> .env
           echo "DB_CONNECTION=mysql" >> .env
-          echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
           echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
-          echo "MYSQL_HOST=dibodev.com" >> .env
+          echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> .env
           echo "MYSQL_PORT=3306" >> .env
           echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
           echo "MYSQL_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
           echo "CACHE_VIEWS=false" >> .env
           echo "BASE_URL=https://analytics.dibodev.com" >> .env
+
+      - name: 🧱 Build application
+        run: |
+          npm run build
+          cp .env build/.env
+
+      - name: 🛁 Clean install for production
+        run: cd build && npm ci --production --ignore-scripts
 
       - name: 📤 Deploy to VPS
         uses: appleboy/scp-action@master
@@ -54,7 +56,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "./build/"
-          target: "/var/www/analytics.dibodev.com"
+          target: ${{ env.APP_DIR }}/html
 
       - name: 🚀 Restart API with PM2, Run Migrations and Seeders
         uses: appleboy/ssh-action@master
@@ -64,8 +66,8 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /var/www/analytics.dibodev.com
-            pm2 restart analytics.dibodev.com|| pm2 start server.js --name analytics.dibodev.com
-            cd /var/www/analytics.dibodev.com
+            pm2 restart analytics.dibodev.com || pm2 start server.js --name analytics.dibodev.com
+            pm2 save
+            cd ${{ env.APP_DIR }}/html/build
             node ace migration:run --force
             node ace db:seed
