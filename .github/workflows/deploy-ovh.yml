@@ -32,7 +32,6 @@ jobs:
           echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env
           echo "DRIVE_DISK=local" >> .env
           echo "DB_CONNECTION=mysql" >> .env
-          echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
           echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
           echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> .env
           echo "MYSQL_PORT=3306" >> .env
