@@ -66,8 +66,8 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            cd ${{ env.APP_DIR }}/html/build
             pm2 restart analytics.dibodev.com || pm2 start server.js --name analytics.dibodev.com
             pm2 save
-            cd ${{ env.APP_DIR }}/html/build
             node ace migration:run --force
             node ace db:seed
