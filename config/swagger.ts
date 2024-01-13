@@ -10,8 +10,7 @@ export default {
   specEnabled: true, //disable or enable swagger.json route
   specUrl: '/swagger',
   specFilePath: 'docs/swagger/swagger.json',
-  middleware:
-    Env.get('NODE_ENV') === 'development' || Env.get('NODE_ENV') === 'test' ? [] : ['auth'], // middlewares array, for protect your swagger docs and spec endpoints
+  // middleware: Env.get('NODE_ENV') === 'development' || Env.get('NODE_ENV') === 'test' ? [] : ['auth'], // middlewares array, for protect your swagger docs and spec endpoints
   options: {
     definition: {
       openapi: '3.0.0',
