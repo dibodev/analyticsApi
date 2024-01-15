@@ -24,21 +24,17 @@ jobs:
       - name: 🔍 Install dependencies
         run: npm install
 
-      - name: 📝 Create .env file
+      - name: 📝 Setup Production .env File
+        run: cp .env.production .env
+
+      - name: 📝 Update .env with Secrets
         run: |
-          echo "PORT=3333" > .env
-          echo "HOST=0.0.0.0" >> .env
-          echo "NODE_ENV=production" >> .env
-          echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env
-          echo "DRIVE_DISK=local" >> .env
-          echo "DB_CONNECTION=mysql" >> .env
-          echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
-          echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> .env
-          echo "MYSQL_PORT=3306" >> .env
-          echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
-          echo "MYSQL_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
-          echo "CACHE_VIEWS=false" >> .env
-          echo "BASE_URL=https://analytics.dibodev.com" >> .env
+          sed -i "s/APP_KEY=.*/APP_KEY=${{ secrets.APP_KEY }}/" .env
+          sed -i "s/MYSQL_DATABASE=.*/MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}/" .env
+          sed -i "s/MYSQL_HOST=.*/MYSQL_HOST=${{ secrets.MYSQL_HOST }}/" .env
+          sed -i "s/MYSQL_PORT=.*/MYSQL_PORT=${{ secrets.MYSQL_PORT }}/" .env
+          sed -i "s/MYSQL_USER=.*/MYSQL_USER=${{ secrets.MYSQL_USER }}/" .env
+          sed -i "s/MYSQL_PASSWORD=.*/MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}/" .env
 
       - name: 🧱 Build application
         run: |
