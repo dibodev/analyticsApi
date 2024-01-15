@@ -73,6 +73,8 @@ jobs:
             echo "Restarting API with PM2..."
             pm2 restart analytics.dibodev.com || pm2 start server.js --name analytics.dibodev.com
             pm2 save
+            echo "Restarting Nginx..."
+            sudo systemctl restart nginx
             echo "Running Migrations..."
             node ace migration:run --force
             echo "Running Seeders..."
