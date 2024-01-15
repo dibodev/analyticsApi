@@ -59,6 +59,14 @@ jobs:
           REMOTE_PORT: ${{ secrets.SSH_PORT }}
           TARGET: ${{ env.APP_DIR }}/html
           SCRIPT_BEFORE: |
+            if ! command -v rsync &> /dev/null
+            then
+              echo "rsync could not be found, installing..."
+              sudo apt-get update
+              sudo apt-get install -y rsync
+            else
+              echo "rsync is already installed."
+            fi
             echo "Starting deployment..."
           SCRIPT_AFTER: |
             cd ${{ env.APP_DIR }}/html/build
