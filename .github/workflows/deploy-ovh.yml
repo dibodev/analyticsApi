@@ -49,25 +49,24 @@ jobs:
         run: cd build && npm ci --production --ignore-scripts
 
       - name: 📤 Deploy to VPS
-        uses: appleboy/scp-action@master
+        uses: easingthemes/ssh-deploy@main
         with:
-          host: ${{ secrets.SSH_HOST }}
-          port: ${{ secrets.SSH_PORT }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "./build/"
-          target: ${{ env.APP_DIR }}/html
-
-      - name: 🚀 Restart API with PM2, Run Migrations and Seeders
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          port: ${{ secrets.SSH_PORT }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ARGS: "-azrut --delete"
+          SOURCE: "build/"
+          REMOTE_HOST: ${{ secrets.SSH_HOST }}
+          REMOTE_USER: ${{ secrets.SSH_USERNAME }}
+          REMOTE_PORT: ${{ secrets.SSH_PORT }}
+          TARGET: ${{ env.APP_DIR }}/html
+          SCRIPT_BEFORE: |
+            echo "Starting deployment..."
+          SCRIPT_AFTER: |
             cd ${{ env.APP_DIR }}/html/build
+            echo "Restarting API with PM2..."
             pm2 restart analytics.dibodev.com || pm2 start server.js --name analytics.dibodev.com
             pm2 save
+            echo "Running Migrations..."
             node ace migration:run --force
+            echo "Running Seeders..."
             node ace db:seed
+            echo "Deployment completed successfully!"
