@@ -21,9 +21,6 @@ jobs:
         with:
           node-version: 18
 
-      - name: 🔍 Install dependencies
-        run: npm install
-
       - name: 📝 Setup Production .env File
         run: cp .env.production .env
 
@@ -66,6 +63,8 @@ jobs:
             echo "Starting deployment..."
           SCRIPT_AFTER: |
             cd ${{ env.APP_DIR }}/html
+            echo "Install dependencies..."
+            npm i
             echo "Restarting API with PM2..."
             pm2 restart analytics.dibodev.com || pm2 start server.js --name analytics.dibodev.com
             pm2 save
