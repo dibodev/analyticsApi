@@ -34,7 +34,7 @@ jobs:
           sed -i "s/MYSQL_HOST=.*/MYSQL_HOST=${{ secrets.MYSQL_HOST }}/" .env
           sed -i "s/MYSQL_PORT=.*/MYSQL_PORT=${{ secrets.MYSQL_PORT }}/" .env
           sed -i "s/MYSQL_USER=.*/MYSQL_USER=${{ secrets.MYSQL_USER }}/" .env
-          sed -i "s/MYSQL_PASSWORD=.*/MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}/" .env
+          sed -i "s/MYSQL_PASSWORD=.*/MYSQL_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}/" .env
 
       - name: 🧱 Build application
         run: |
