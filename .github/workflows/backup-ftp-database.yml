@@ -16,7 +16,7 @@ jobs:
 
       - name: MySQLDump - Connect Database and Backup MariaDB Database FTP
         run: |
-          mkdir backup_databases && cd backup_databases
+          mkdir backup_databases && cd backup_databases && mkdir ${{ secrets.MYSQL_DATABASE }} && cd ${{ secrets.MYSQL_DATABASE }}
           FILENAME="database_${{ secrets.MYSQL_DATABASE }}_backup-$(date +%d-%m-%Y-%H-%M-%S).sql.gz"
           mysqldump \
             --host='${{ secrets.MYSQL_HOST }}' \
