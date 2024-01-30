@@ -6,12 +6,12 @@ import type { UAParserInstance } from 'ua-parser-js'
 import geoip from 'geoip-lite'
 import type { Lookup } from 'geoip-lite'
 import ProjectsService from 'App/Services/ProjectsService'
-import AnalyticsService from 'App/Services/AnalyticsService'
 import SessionService from 'App/Services/SessionService'
 import Visitor from 'App/Models/Visitor'
 import Session from 'App/Models/Session'
 import VisitorEvent from 'App/Models/VisitorEvent'
 import Project from 'App/Models/Project'
+import AnalyticsRealTimeService from 'App/Services/analytics/AnalyticsRealTimeService'
 
 export interface EventData {
   userAgent: string
@@ -62,8 +62,8 @@ export default class DataService {
 
     const visitor: Visitor = await VisitorService.findOrCreate(visitorId, data.domain, geo)
 
-    AnalyticsService.addVisitor(data.domain, visitorId)
-    AnalyticsService.emitVisitorCountForProject(data.domain)
+    AnalyticsRealTimeService.addVisitor(data.domain, visitorId)
+    AnalyticsRealTimeService.emitVisitorCountForProject(data.domain)
 
     if (!visitor) {
       throw new Error('Visitor could not be created')
@@ -109,8 +109,8 @@ export default class DataService {
       data.userAgent
     )
 
-    AnalyticsService.removeVisitor(data.domain, visitorId)
-    AnalyticsService.emitVisitorCountForProject(data.domain)
+    AnalyticsRealTimeService.removeVisitor(data.domain, visitorId)
+    AnalyticsRealTimeService.emitVisitorCountForProject(data.domain)
 
     await SessionService.endSession(visitorId)
   }
