@@ -29,10 +29,11 @@ export interface VisitorData {
   deviceType: string
   geo: Lookup
   referrer: string | null
+  clientIp?: string | null
   url: string
 }
 
-export default class DataService {
+export default class VisitorTrackingDataService {
   public static async collectVisitorData(clientIp: string, data: EventData): Promise<VisitorData> {
     const uaParser: UAParserInstance = new UAParser(data.userAgent)
     const browserName: string | null = uaParser.getBrowser().name || null
@@ -40,14 +41,6 @@ export default class DataService {
     const deviceType: string = uaParser.getDevice().type || 'desktop'
     const geo: Lookup = geoip.lookup(clientIp) as Lookup
 
-    console.log({
-      clientIp,
-      data,
-      geo,
-      browserName,
-      osName,
-      deviceType,
-    })
     const url: string = data.url
     const userAgent: string = data.userAgent
 
@@ -94,6 +87,7 @@ export default class DataService {
       browserName,
       osName,
       deviceType,
+      clientIp,
       geo,
       referrer: data.referrer,
       url,
