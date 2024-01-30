@@ -6,12 +6,12 @@ import type { UAParserInstance } from 'ua-parser-js'
 import geoip from 'geoip-lite'
 import type { Lookup } from 'geoip-lite'
 import ProjectsService from 'App/Services/ProjectsService'
-import AnalyticsService from 'App/Services/AnalyticsService'
 import SessionService from 'App/Services/SessionService'
 import Visitor from 'App/Models/Visitor'
 import Session from 'App/Models/Session'
 import VisitorEvent from 'App/Models/VisitorEvent'
 import Project from 'App/Models/Project'
+import AnalyticsRealTimeService from 'App/Services/analytics/AnalyticsRealTimeService'
 
 export interface EventData {
   userAgent: string
@@ -29,10 +29,11 @@ export interface VisitorData {
   deviceType: string
   geo: Lookup
   referrer: string | null
+  clientIp?: string | null
   url: string
 }
 
-export default class DataService {
+export default class VisitorTrackingDataService {
   public static async collectVisitorData(clientIp: string, data: EventData): Promise<VisitorData> {
     const uaParser: UAParserInstance = new UAParser(data.userAgent)
     const browserName: string | null = uaParser.getBrowser().name || null
@@ -40,14 +41,6 @@ export default class DataService {
     const deviceType: string = uaParser.getDevice().type || 'desktop'
     const geo: Lookup = geoip.lookup(clientIp) as Lookup
 
-    console.log({
-      clientIp,
-      data,
-      geo,
-      browserName,
-      osName,
-      deviceType,
-    })
     const url: string = data.url
     const userAgent: string = data.userAgent
 
@@ -62,8 +55,8 @@ export default class DataService {
 
     const visitor: Visitor = await VisitorService.findOrCreate(visitorId, data.domain, geo)
 
-    AnalyticsService.addVisitor(data.domain, visitorId)
-    AnalyticsService.emitVisitorCountForProject(data.domain)
+    AnalyticsRealTimeService.addVisitor(data.domain, visitorId)
+    AnalyticsRealTimeService.emitVisitorCountForProject(data.domain)
 
     if (!visitor) {
       throw new Error('Visitor could not be created')
@@ -94,6 +87,7 @@ export default class DataService {
       browserName,
       osName,
       deviceType,
+      clientIp,
       geo,
       referrer: data.referrer,
       url,
@@ -109,8 +103,8 @@ export default class DataService {
       data.userAgent
     )
 
-    AnalyticsService.removeVisitor(data.domain, visitorId)
-    AnalyticsService.emitVisitorCountForProject(data.domain)
+    AnalyticsRealTimeService.removeVisitor(data.domain, visitorId)
+    AnalyticsRealTimeService.emitVisitorCountForProject(data.domain)
 
     await SessionService.endSession(visitorId)
   }
