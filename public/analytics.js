@@ -19,7 +19,7 @@
   }
 
   function onRouteChange() {
-    sendEvent(window.location.href, document.referrer || null, '/event')
+    sendEvent(window.location.href, document.referrer || null, '/pageview')
   }
 
   function onLeave() {
