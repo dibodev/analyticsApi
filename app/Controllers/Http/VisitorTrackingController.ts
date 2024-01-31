@@ -7,8 +7,8 @@ import type { IPApiResponse } from 'App/Services/IPService'
 import { RequestContract } from '@ioc:Adonis/Core/Request'
 
 export default class VisitorTrackingController {
-  public async join({ request }: HttpContextContract): Promise<string> {
-    return IPService.getIpFromHeaders(request)
+  public async join({ request }: HttpContextContract): Promise<IPApiResponse | null> {
+    return await IPService.getClientIpInfo(request)
   }
   public async leave({ request, response }: HttpContextContract): Promise<void> {
     const visitorTrackingData: VisitorTrackingData = await request.validate(
