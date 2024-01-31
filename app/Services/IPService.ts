@@ -2,9 +2,15 @@ import axios from 'axios'
 import type { RequestContract } from '@ioc:Adonis/Core/Request'
 import type { LocationPayload } from 'App/Services/LocationService'
 
+type IPApiErrorResponse = {
+  ip: string
+  success: false
+  message: string
+}
+
 export type IPApiResponse = {
   ip: string
-  success: boolean
+  success: true
   type: string
   continent: string
   continent_code: string
@@ -70,7 +76,11 @@ export default class IPService {
   private static async fetchIpInfo(ip?: string): Promise<IPApiResponse | null> {
     try {
       const url: string = ip ? `https://ipwho.is/${ip}` : 'https://ipwho.is/'
-      const response: { data: IPApiResponse } = await axios.get(url)
+      const response: { data: IPApiResponse | IPApiErrorResponse } = await axios.get(url)
+      if (!response.data.success) {
+        console.error('Error fetching IP info:', response.data.message)
+        return null
+      }
       return response.data
     } catch (error) {
       console.error('Error fetching IP info:', error)
