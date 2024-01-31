@@ -1,29 +1,37 @@
 import Location from 'App/Models/Location'
-import type { Lookup } from 'geoip-lite'
+
+export interface LocationPayload {
+  country: string
+  region: string
+  city: string
+}
+
 export default class LocationService {
-  public static async findOrCreate(geo: Lookup | null): Promise<Location | null> {
-    if (!geo) {
+  public static async findOrCreate(
+    locationPayload: LocationPayload | null
+  ): Promise<Location | null> {
+    if (!locationPayload) {
       return null
     }
-    let location: Location | null = await this.find(geo)
+    let location: Location | null = await this.find(locationPayload)
     if (!location) {
-      await this.create(geo)
+      await this.create(locationPayload)
     }
     return location
   }
-  public static async find(geo: Lookup): Promise<Location | null> {
+  public static async find(locationPayload: LocationPayload): Promise<Location | null> {
     return await Location.query()
-      .where('country', geo.country)
-      .where('region', geo.region)
-      .where('city', geo.city)
+      .where('country', locationPayload.country)
+      .where('region', locationPayload.region)
+      .where('city', locationPayload.city)
       .first()
   }
 
-  public static async create(geo: Lookup): Promise<Location> {
+  public static async create(locationPayload: LocationPayload): Promise<Location> {
     const location: Location = new Location()
-    location.country = geo.country
-    location.region = geo.region
-    location.city = geo.city
+    location.country = locationPayload.country
+    location.region = locationPayload.region
+    location.city = locationPayload.city
     await location.save()
     return location
   }

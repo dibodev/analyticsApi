@@ -1,6 +1,6 @@
 import Visitor from 'App/Models/Visitor'
-import type { Lookup } from 'geoip-lite'
 import LocationService from './LocationService'
+import type { LocationPayload } from './LocationService'
 import { DateTime } from 'luxon'
 import ProjectsService from 'App/Services/ProjectsService'
 import crypto from 'crypto'
@@ -16,11 +16,11 @@ export default class VisitorService {
   public static async findOrCreate(
     visitorId: string,
     domain: string,
-    geo: Lookup | null
+    locationPayload: LocationPayload | null
   ): Promise<Visitor> {
     let visitor: Visitor | null = await this.findByVisitorId(visitorId)
     if (!visitor) {
-      const location: Location | null = await LocationService.findOrCreate(geo)
+      const location: Location | null = await LocationService.findOrCreate(locationPayload)
 
       visitor = await this.create(visitorId, domain, location?.id)
     }
@@ -78,7 +78,7 @@ export default class VisitorService {
     salt: string,
     domain: string,
     clientIp: string,
-    userAgent: string
+    userAgent: string | null
   ): Promise<string> {
     return crypto
       .createHash('sha256')

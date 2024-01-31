@@ -4,17 +4,20 @@ import type { VisitorData } from 'App/Services/VisitorTrackingDataService'
 import VisitorTrackingDataValidator from 'App/Validators/VisitorTrackingDataValidator'
 import type { VisitorTrackingData } from 'App/Validators/VisitorTrackingDataValidator'
 import IPService from 'App/Services/IPService'
+import type { IPApiResponse } from 'App/Services/IPService'
+import { RequestContract } from '@ioc:Adonis/Core/Request'
 
 export default class VisitorTrackingController {
   public async join({ request }: HttpContextContract): Promise<VisitorData> {
     const visitorTrackingData: VisitorTrackingData = await request.validate(
       VisitorTrackingDataValidator
     )
-    const userAgent: string = visitorTrackingData.userAgent || request.header('User-Agent') || ''
 
-    const clientIp: string = await IPService.getClientIp(request.ip())
+    const userAgent: string | null = this.getUserAgent(visitorTrackingData, request)
 
-    return await VisitorTrackingDataService.collectVisitorData(clientIp, {
+    const clientIpInfos: IPApiResponse | null = await IPService.getClientIpInfo(request)
+
+    return await VisitorTrackingDataService.collectVisitorData(clientIpInfos, {
       ...visitorTrackingData,
       userAgent,
     })
@@ -23,11 +26,18 @@ export default class VisitorTrackingController {
     const visitorTrackingData: VisitorTrackingData = await request.validate(
       VisitorTrackingDataValidator
     )
-    const userAgent: string = visitorTrackingData.userAgent || request.header('User-Agent') || ''
+    const userAgent: string | null = this.getUserAgent(visitorTrackingData, request)
 
-    const clientIp: string = await IPService.getClientIp(request.ip())
+    const clientIpInfos: IPApiResponse | null = await IPService.getClientIpInfo(request)
 
-    await VisitorTrackingDataService.leave(clientIp, { ...visitorTrackingData, userAgent })
+    await VisitorTrackingDataService.leave(clientIpInfos, { ...visitorTrackingData, userAgent })
     response.send({ success: true })
+  }
+
+  private getUserAgent(
+    visitorTrackingData: VisitorTrackingData,
+    request: RequestContract
+  ): string | null {
+    return visitorTrackingData.userAgent || request.header('User-Agent') || null
   }
 }
