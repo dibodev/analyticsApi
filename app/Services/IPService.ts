@@ -100,7 +100,8 @@ export default class IPService {
   }
 
   private static getIpFromHeaders(request: RequestContract): string {
-    const forwarded = request.header('X-Forwarded-For') || request.header('X-Real-IP')
+    const forwarded: string | undefined =
+      request.header('X-Forwarded-For') || request.header('X-Real-IP')
     return forwarded ? forwarded.split(',')[0].trim() : request.ip()
   }
 }
