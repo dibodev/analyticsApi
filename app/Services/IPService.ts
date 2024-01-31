@@ -68,12 +68,12 @@ export default class IPService {
     if (!env || env === 'development') {
       return await this.fetchIpInfo()
     } else {
-      const ip: string | null = this.getIpFromHeaders(request)
+      const ip: string = this.getIpFromHeaders(request)
       return await this.fetchIpInfo(ip)
     }
   }
 
-  private static async fetchIpInfo(ip?: string | null): Promise<IPApiResponse | null> {
+  private static async fetchIpInfo(ip?: string): Promise<IPApiResponse | null> {
     try {
       const url: string = ip ? `https://ipwho.is/${ip}` : 'https://ipwho.is/'
       const response: { data: IPApiResponse | IPApiErrorResponse } = await axios.get(url)
@@ -99,9 +99,9 @@ export default class IPService {
     }
   }
 
-  public static getIpFromHeaders(request: RequestContract): string | null {
+  private static getIpFromHeaders(request: RequestContract): string {
     const forwarded: string | undefined =
       request.header('X-Forwarded-For') || request.header('X-Real-IP')
-    return forwarded ? forwarded.split(',')[0].trim() : null
+    return forwarded ? forwarded.split(',')[0].trim() : request.ip()
   }
 }
