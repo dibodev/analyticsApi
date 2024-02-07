@@ -11,7 +11,7 @@ type IPApiErrorResponse = {
 export type IPApiResponse = {
   ip: string
   success: true
-  type: string
+  type: 'IPv4' | 'IPv6'
   continent: string
   continent_code: string
   country: string
