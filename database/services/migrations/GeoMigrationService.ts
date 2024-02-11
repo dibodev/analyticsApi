@@ -104,7 +104,9 @@ class GeoMigrationService {
       return null
     }
 
-    const url: string = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(city)}&key=${openCageApiKey}`
+    const url: string = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(
+      city
+    )}&key=${openCageApiKey}`
 
     try {
       const response: AxiosResponse<OpenCageApiResponse> = await axios.get<OpenCageApiResponse>(url)

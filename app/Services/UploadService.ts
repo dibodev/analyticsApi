@@ -4,8 +4,8 @@ import Application from '@ioc:Adonis/Core/Application'
 import Env from '@ioc:Adonis/Core/Env'
 
 export default class UploadService {
-  private static publicPath = Application.publicPath()
-  private static maxFileSize = 5 * 1024 * 1024 // 5 MB
+  private static publicPath: string = Application.publicPath()
+  private static maxFileSize: number = 5 * 1024 * 1024 // 5 MB
   public static async uploadImage(
     file: string | null,
     contentType: string | null,
@@ -23,10 +23,10 @@ export default class UploadService {
     if (!name) {
       name = Math.random().toString(36).substring(2) + Date.now().toString(36)
     }
-    const tmpFilePath = path.join(this.publicPath, `${name}.ico`)
-    const apiUrl = Env.get('BASE_URL')
+    const tmpFilePath: string = path.join(this.publicPath, `${name}.ico`)
+    const apiUrl: string = Env.get('BASE_URL')
 
-    const imageUrl = `${apiUrl}/${name}.ico`
+    const imageUrl: string = `${apiUrl}/${name}.ico`
 
     // File already exists
     if (fs.existsSync(tmpFilePath)) {

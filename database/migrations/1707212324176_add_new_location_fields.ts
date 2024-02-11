@@ -6,13 +6,13 @@ export default class AddNewLocationFields extends BaseSchema {
   public async up() {
     this.schema.table(this.tableName, (table) => {
       table.dropColumn('alpha_3')
-      table.string('continent', 50).nullable().after('id')
+      table.string('continent', 255).nullable().after('id')
       table.string('continent_code', 10).nullable().after('continent')
-      table.string('country', 50).nullable().alter().after('continent_code')
+      table.string('country', 255).nullable().alter().after('continent_code')
       table.string('country_code', 10).nullable().after('country')
-      table.string('region', 50).nullable().alter().after('country_code')
+      table.string('region', 255).nullable().alter().after('country_code')
       table.string('region_code', 10).nullable().after('region')
-      table.string('city', 50).notNullable().alter().after('region_code')
+      table.string('city', 255).notNullable().alter().after('region_code')
       table.decimal('latitude', 10, 8).nullable().after('city')
       table.decimal('longitude', 11, 8).nullable().after('latitude')
       table.string('postal', 20).nullable().after('longitude')

@@ -7,14 +7,6 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table
-        .integer('visitor_id')
-        .unsigned()
-        .index()
-        .references('id')
-        .inTable('visitors')
-        .onDelete('CASCADE')
-        .notNullable()
-      table
         .integer('page_view_id')
         .unsigned()
         .index()

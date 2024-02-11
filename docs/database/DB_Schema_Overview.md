@@ -16,6 +16,7 @@ This table contains information about projects.
 - **Column**: `active`
   - **Type**: Boolean
   - **Default**: False
+  - **Constraints**: Nullable
 - **Timestamps**: Yes (created and updated)
 
 ### 2. `locations`
@@ -24,25 +25,25 @@ Stores geographical information.
 - **Column**: `id`
   - **Type**: Auto-increment (primary key)
 - **Column**: `continent` // Example: Africa, Europe, etc.
-  - **Type**: String (50)
+  - **Type**: String (255)
   - **Constraints**: Nullable
 - **Column**: `continent_code` // Example: AF, EU, etc.
   - **Type**: String (10)
   - **Constraints**: Nullable
 - **Column**: `country` // Example: Cameroon, France, etc.
-  - **Type**: String (50)
+  - **Type**: String (255)
   - **Constraints**: Nullable
 - **Column**: `country_code` // Example: CM, FR, etc.
   - **Type**: String (10)
   - **Constraints**: Nullable
 - **Column**: `region` // Example: Île-de-France, Littoral, etc.
-  - **Type**: String (50)
+  - **Type**: String (255)
   - **Constraints**: Nullable
 - **Column**: `region_code` // Example: IDF, LT, etc.
   - **Type**: String (10)
   - **Constraints**: Nullable
 - **Column**: `city` // Example: Douala, Paris, etc.
-  - **Type**: String (50)
+  - **Type**: String (255)
   - **Constraints**: Not nullable
 - **Column**: `latitude` // Example: 48.856614, 4.051056
   - **Type**: Decimal (10, 8)
@@ -138,9 +139,14 @@ For recording individual page views with additional details.
   - **Type**: Integer (index)
   - **Foreign Key**: References `pages.id`
   - **Constraints**: Not nullable
+- **Column**: `user_agent_id`
+  - **Type**: Integer (index)
+  - **Foreign Key**: References `user_agents.id`
+  - **Constraints**: Nullable
 - **Column**: `session_start`
   - **Type**: Timestamp
   - **Default**: Current timestamp
+  - **Constraints**: Not nullable
 - **Column**: `session_end`
   - **Type**: Timestamp
   - **Constraints**: Nullable
@@ -203,10 +209,6 @@ Stores real-time visitor sessions.
 
 - **Column**: `id`
   - **Type**: Integer (primary key)
-- **Column**: `visitor_id`
-  - **Type**: Integer (index)
-  - **Foreign Key**: References `visitors.id`
-  - **Constraints**: Not nullable
 - **Column**: `page_view_id` 
   - **Type**: Integer (index)
   - **Foreign Key**: References `page_views.id`
@@ -214,4 +216,5 @@ Stores real-time visitor sessions.
 - **Column**: `active`
   - **Type**: Boolean
   - **Default**: True
+  - **Constraints**: Nullable
 - **Timestamps**: Yes (created and updated)

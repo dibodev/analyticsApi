@@ -23,6 +23,7 @@ components:
           example: 'example.com'
         favicon:
           type: string
+          nullable: true
           example: 'https://example.com/favicon.png'
         active:
           type: boolean
@@ -42,6 +43,6 @@ components:
         properties:
           project:
             $ref: '#/components/schemas/Project'
-          visitorLast24Hours:
+          nbUniqueVisitorLast24Hours:
             type: number
             example: 100

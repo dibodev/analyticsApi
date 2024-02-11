@@ -6,7 +6,6 @@ import Location from 'App/Models/Location'
 
 export default class FillNewLocationFields extends BaseSchema {
   protected tableName: string = 'locations'
-  protected visitorEventsTableName: string = 'visitor_events'
 
   public async up() {
     // Update flag emoji for accept emoji characters

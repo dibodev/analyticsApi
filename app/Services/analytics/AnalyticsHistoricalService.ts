@@ -1,6 +1,6 @@
 import { DateTime, Duration } from 'luxon'
 import Project from 'App/Models/Project'
-import ProjectsService from 'App/Services/ProjectsService'
+import ProjectService from 'App/Services/ProjectService'
 import AnalyticsDataService from 'App/Services/analytics/AnalyticsDataService'
 import type { Metrics } from 'App/Services/analytics/AnalyticsDataService'
 import AnalyticsUtilityService from 'App/Services/analytics/AnalyticsUtilityService'
@@ -22,7 +22,7 @@ export default class AnalyticsHistoricalService {
     period?: string
     endAt: DateTime
   }): Promise<Array<TopStats>> {
-    const project: Project = await ProjectsService.getByDomain(domain)
+    const project: Project = await ProjectService.getByDomain(domain)
     const startAt: DateTime = this.getStartAt(period, endAt, project)
     return await this.getTopStats(project, startAt, endAt)
   }

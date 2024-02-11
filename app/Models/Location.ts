@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import type { HasMany } from '@ioc:Adonis/Lucid/Orm'
-import Visitor from 'App/Models/Visitor'
+import VisitorIp from 'App/Models/VisitorIp'
 
 export default class Location extends BaseModel {
   @column({ isPrimary: true })
@@ -11,19 +11,19 @@ export default class Location extends BaseModel {
   public continent: string | null
 
   @column() // Example: EU
-  public continent_code: string | null
+  public continentCode: string | null
 
   @column() // Example: France
   public country: string | null
 
   @column() // Example: FR
-  public country_code: string | null
+  public countryCode: string | null
 
   @column() // Example: Île-de-France
   public region: string | null
 
   @column() // Example: IDF
-  public region_code: string | null
+  public regionCode: string | null
 
   @column() // Example: Paris
   public city: string
@@ -38,13 +38,13 @@ export default class Location extends BaseModel {
   public postal: string | null
 
   @column() // Example: https://cdn.ipwhois.io/flags/fr.svg
-  public flag_img_url: string | null
+  public flagImgUrl: string | null
 
   @column() // Example: U+1F1EB U+1F1F7
-  public flag_emoji: string | null
+  public flagEmoji: string | null
 
-  @hasMany(() => Visitor)
-  public visitors: HasMany<typeof Visitor>
+  @hasMany(() => VisitorIp)
+  public visitorIps: HasMany<typeof VisitorIp>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

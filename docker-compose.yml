@@ -6,6 +6,8 @@ services:
     image: mariadb:latest
     env_file:
       - .env
+    environment:
+      - TZ=Europe/Paris
     ports:
       - "3306:3306"
     volumes:
