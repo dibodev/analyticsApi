@@ -15,7 +15,6 @@ export default class AppProvider {
     // App is ready
     if (this.app.environment === 'web') {
       await import('../start/socket')
-      await import('../start/app')
     }
   }
 
