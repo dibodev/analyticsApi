@@ -62,6 +62,13 @@ export type IPApiResponse = {
 }
 
 export default class IPService {
+  /**
+   * Retrieves IP address information from an external API.
+   *
+   * @param {RequestContract} request - The HTTP request object.
+   *
+   * @returns {Promise<IPApiResponse | null>} Returns a promise that resolves to IP address information or null if it cannot be retrieved.
+   */
   public static async getClientIpInfo(request: RequestContract): Promise<IPApiResponse | null> {
     const env: string | undefined = process.env.NODE_ENV
 
@@ -73,6 +80,12 @@ export default class IPService {
     }
   }
 
+  /**
+   * Fetches IP information from the ipwho.is API.
+   *
+   * @param {string} [ip] - Optional IP address to fetch information for. If not provided, information for the current IP will be fetched.
+   * @returns {Promise<IPApiResponse | null>} - A Promise that resolves with the fetched IP information or null if an error occurred.
+   */
   private static async fetchIpInfo(ip?: string): Promise<IPApiResponse | null> {
     try {
       const url: string = ip ? `https://ipwho.is/${ip}` : 'https://ipwho.is/'
@@ -88,6 +101,13 @@ export default class IPService {
     }
   }
 
+  /**
+   * Extracts location information from the provided IP API response.
+   *
+   * @param {IPApiResponse | null} ipApiResponse - The IP API response.
+   * @return {LocationPayload | null} - The extracted location information.
+   *             Returns null if the IP API response is null.
+   */
   public static extractLocationInfo(ipApiResponse: IPApiResponse | null): LocationPayload | null {
     if (!ipApiResponse) {
       return null
@@ -99,6 +119,13 @@ export default class IPService {
     }
   }
 
+  /**
+   * Retrieves the IP address from the given request headers.
+   *
+   * @param {RequestContract} request - The request object containing the headers.
+   *
+   * @return {string} The IP address extracted from the headers. If not found, the IP address from the request object is returned.
+   */
   private static getIpFromHeaders(request: RequestContract): string {
     const forwarded: string | undefined =
       request.header('X-Forwarded-For') || request.header('X-Real-IP')

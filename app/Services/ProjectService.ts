@@ -10,18 +10,14 @@ export type ProjectWithUniqueVisitorCountLast24Hours = {
 }
 
 export default class ProjectService {
-  /**
-   * Retrieves all projects.
-   * @returns Promise<Project[]>
-   */
   public static async getAll(): Promise<Array<Project>> {
     return await Project.all()
   }
 
   /**
    * Retrieves a project by its ID.
-   * @param id - Project ID
-   * @returns Promise<Project>
+   * @param {number} id - Project ID
+   * @returns {Promise<Project>} - Promise that resolves with the retrieved project.
    */
   public static async getById(id: number): Promise<Project> {
     return await Project.findOrFail(id)
