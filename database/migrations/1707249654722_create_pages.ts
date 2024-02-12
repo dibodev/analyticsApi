@@ -15,6 +15,7 @@ export default class CreatePages extends BaseSchema {
         .index()
         .references('id')
         .inTable('projects')
+        .onDelete('CASCADE')
       table.timestamps(true, true)
     })
   }
