@@ -1,8 +1,8 @@
 import Project from 'App/Models/Project'
 import DomainService from 'App/Services/DomainService'
 import Visitor from 'App/Models/Visitor'
-import VisitorService from 'App/Services/VisitorService'
-import PageViewService from 'App/Services/PageViewService'
+import AnalyticsViewsService from 'App/Services/analytics/AnalyticsViewsService'
+import { DateTime } from 'luxon'
 
 export type ProjectWithUniqueVisitorCountLast24Hours = {
   project: Project
@@ -57,10 +57,15 @@ export default class ProjectService {
 
     return Promise.all(
       projects.map(async (project: Project): Promise<ProjectWithUniqueVisitorCountLast24Hours> => {
-        const visitorIds: Array<number> = await VisitorService.getVisitorIdsByProjectId(project.id)
-
+        const periodOf24HoursAgo: {
+          startAt: DateTime
+          endAt: DateTime
+        } = {
+          startAt: DateTime.now().minus({ hours: 24 }),
+          endAt: DateTime.now(),
+        }
         const nbUniqueVisitorLast24Hours: number =
-          await PageViewService.getNumberUniquePageViewsForVisitorsInLastHours(visitorIds, 24)
+          await AnalyticsViewsService.getUniqueViewsOfProject(project.id, periodOf24HoursAgo)
 
         return { project, nbUniqueVisitorLast24Hours }
       })

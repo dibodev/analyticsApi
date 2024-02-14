@@ -1,105 +1,65 @@
-// import VisitorService from 'App/Services/VisitorService'
-// import VisitorEventService from 'App/Services/VisitorEventService'
-// import SessionService from 'App/Services/SessionService'
-// import { DateTime } from 'luxon'
-// import Visitor from 'App/Models/Visitor'
-// import Session from 'App/Models/Session'
-// import VisitorEvent from 'App/Models/VisitorEvent'
-//
-// export type Metrics = {
-//   uniqueVisitors: number
-//   totalPageViews: number
-//   viewPerVisit: number
-//   bounceRate: number
-//   avgVisitDuration: number
-// }
-//
-// export default class AnalyticsDataService {
-//   public static async getMetrics(
-//     projectId: number,
-//     startAt: DateTime,
-//     endAt: DateTime
-//   ): Promise<Metrics> {
-//     const uniqueVisitors: Array<Visitor> = await this.getUniqueVisitors(projectId, startAt, endAt)
-//     const projectVisitorEvents: Array<VisitorEvent> = await this.getVisitorEvents(
-//       projectId,
-//       startAt,
-//       endAt
-//     )
-//
-//     const totalPageViews: number = projectVisitorEvents.length
-//
-//     const viewPerVisit: number = this.roundToTwoDecimals(
-//       totalPageViews / uniqueVisitors.length || 0
-//     )
-//     const bounceRate: number = await this.getBounceRate(uniqueVisitors, startAt, endAt)
-//     const avgVisitDuration: number = await this.getAverageVisitDuration(projectId, startAt, endAt)
-//
-//     return {
-//       uniqueVisitors: uniqueVisitors.length,
-//       totalPageViews,
-//       viewPerVisit,
-//       bounceRate,
-//       avgVisitDuration,
-//     }
-//   }
-//
-//   private static async getUniqueVisitors(
-//     projectId: number,
-//     startAt: DateTime,
-//     endAt: DateTime
-//   ): Promise<Array<Visitor>> {
-//     return await VisitorService.getVisitorsByProjectId(projectId, { startAt, endAt })
-//   }
-//
-//   private static async getVisitorEvents(
-//     projectId: number,
-//     startAt: DateTime,
-//     endAt: DateTime
-//   ): Promise<Array<VisitorEvent>> {
-//     return await VisitorEventService.getVisitorEventsByProjectId(projectId, { startAt, endAt })
-//   }
-//
-//   private static async getBounceRate(
-//     uniqueVisitors: Array<Visitor>,
-//     startAt: DateTime,
-//     endAt: DateTime
-//   ): Promise<number> {
-//     let bounceVisitors: number = 0
-//     for (const visitor of uniqueVisitors) {
-//       const visitorEvents: Array<VisitorEvent> = await VisitorEventService.getByVisitorId(
-//         visitor.id,
-//         { startAt, endAt }
-//       )
-//       if (visitorEvents.length === 1) {
-//         bounceVisitors++
-//       }
-//     }
-//     return this.calculatePercentage(bounceVisitors, uniqueVisitors.length)
-//   }
-//
-//   private static async getAverageVisitDuration(
-//     projectId: number,
-//     startAt: DateTime,
-//     endAt: DateTime
-//   ): Promise<number> {
-//     // Implementation for calculating average visit duration
-//     const sessions: Array<Session> = await SessionService.getByProjectId(projectId, {
-//       startAt,
-//       endAt,
-//     })
-//     const totalVisitDuration: number = sessions.reduce(
-//       (sum: number, session: Session) => sum + (session.visitDuration || 0),
-//       0
-//     )
-//     return this.roundToTwoDecimals(sessions.length ? totalVisitDuration / sessions.length : 0)
-//   }
-//
-//   private static roundToTwoDecimals(num: number): number {
-//     return Math.round(num * 100) / 100
-//   }
-//
-//   private static calculatePercentage(part: number, whole: number): number {
-//     return (part / whole) * 100
-//   }
-// }
+import { DateTime } from 'luxon'
+import AnalyticsViewsService from 'App/Services/analytics/AnalyticsViewsService'
+import { roundToTwoDecimals } from 'App/Utils/NumberUtils'
+
+export type OverviewMetrics = {
+  uniqueVisitors: number
+  uniqueSessions: number
+  totalSessions: number
+  totalViews: number
+  viewsPerVisit: number
+  avgVisitDuration: number
+  bounceRate: number
+}
+
+export default class AnalyticsDataService {
+  /**
+   * Retrieves the overview metrics for a given project.
+   *
+   * @param {number} projectId - The ID of the project.
+   * @param {object} period - The period for which to retrieve metrics. Optional, defaults to the entire project duration.
+   * @param {DateTime} period.startAt - The start date/time of the period.
+   * @param {DateTime} period.endAt - The end date/time of the period.
+   *
+   * @return {Promise<OverviewMetrics>} - A Promise that resolves to an object containing the overview metrics.
+   *
+   * @throws {Error} - If an error occurs while retrieving the metrics.
+   */
+  public static async getOverviewMetrics(
+    projectId: number,
+    period?: {
+      startAt: DateTime
+      endAt: DateTime
+    }
+  ): Promise<OverviewMetrics> {
+    const uniqueVisitors: number = await AnalyticsViewsService.getUniqueViewsOfProject(
+      projectId,
+      period
+    )
+
+    const uniqueSessions: number = await AnalyticsViewsService.getUniqueSessions(projectId, period)
+
+    const totalSessions: number = await AnalyticsViewsService.getTotalSessions(projectId, period)
+
+    const totalViews: number = await AnalyticsViewsService.getViewsOfProject(projectId, period)
+
+    const viewsPerVisit: number = roundToTwoDecimals(totalViews / uniqueVisitors)
+
+    const avgVisitDuration: number = await AnalyticsViewsService.getAverageVisitDuration(
+      projectId,
+      period
+    )
+
+    const bounceRate: number = await AnalyticsViewsService.getBounceRate(projectId, period)
+
+    return {
+      uniqueVisitors,
+      uniqueSessions,
+      totalSessions,
+      totalViews,
+      viewsPerVisit,
+      avgVisitDuration,
+      bounceRate,
+    }
+  }
+}

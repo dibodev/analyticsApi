@@ -1,13 +1,18 @@
 import { test } from '@japa/runner'
-import type { TestContext } from '@japa/runner'
+import type { TestContext, Group } from '@japa/runner'
 import type { ApiResponse } from '@japa/api-client'
 import Project from 'App/Models/Project'
 import { simulateVisitorAndPageView } from '../../utils/page_views_util'
 import type { ProjectWithUniqueVisitorCountLast24Hours } from 'App/Services/ProjectService'
 
-test.group('Projects Controller', (): void => {
+test.group('Projects Controller', (group: Group): void => {
+  const domain: string = 'testproject.com'
+  // before each test, delete project with domain 'testproject.com' if it exists
+  group.setup(async (): Promise<void> => {
+    await Project.query().where('domain', domain).delete()
+  })
+
   test('should create a new project', async ({ client, assert }: TestContext): Promise<void> => {
-    const domain: string = 'testproject.com'
     const response: ApiResponse = await client.post('/projects').json({ domain })
     response.assertStatus(200)
     assert.equal(response.body().domain, domain)
@@ -16,7 +21,7 @@ test.group('Projects Controller', (): void => {
   })
 
   test('should update a project', async ({ client, assert }: TestContext): Promise<void> => {
-    const project: Project = await Project.create({ domain: 'testproject.com' })
+    const project: Project = await Project.create({ domain })
     const newDomain: string = 'newtestproject.com'
     const response: ApiResponse = await client
       .put(`/projects/${project.id}`)
@@ -28,7 +33,7 @@ test.group('Projects Controller', (): void => {
   })
 
   test('should delete a project', async ({ client, assert }: TestContext): Promise<void> => {
-    const project: Project = await Project.create({ domain: 'testproject.com' })
+    const project: Project = await Project.create({ domain })
     const response: ApiResponse = await client.delete(`/projects/${project.id}`)
     response.assertStatus(204)
 
@@ -43,7 +48,7 @@ test.group('Projects Controller', (): void => {
     client,
     assert,
   }: TestContext): Promise<void> => {
-    const project: Project = await Project.create({ domain: 'testproject.com' })
+    const project: Project = await Project.create({ domain })
     const response: ApiResponse = await client.get(`/projects/${project.id}`)
     response.assertStatus(200)
     assert.equal(response.body().id, project.id)
@@ -55,7 +60,7 @@ test.group('Projects Controller', (): void => {
     client,
     assert,
   }: TestContext): Promise<void> => {
-    const project: Project = await Project.create({ domain: 'testproject.com' })
+    const project: Project = await Project.create({ domain })
 
     // Simulate visitors and page views
     await simulateVisitorAndPageView(project.id)

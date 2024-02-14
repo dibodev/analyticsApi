@@ -6,7 +6,8 @@
 - `DELETE /projects/:id`: Delete a project
 
 ### Header Statistics Route
-- `GET /stats/overview`: Fetch overall statistics (unique visitors, total visits, etc.), with query parameters for the period (e.g., `?period=last7days`) and project ID (optional for global statistics)
+- `GET /stats/overview`: Fetch overall statistics (unique visitors, total visits, etc.), with query parameters for the period (e.g., `?period=last7days`)
+- `GET /stats/:domain/overview`: Fetch statistics for a specific project by domain (unique visitors, total visits, etc.), with query parameters for the period, with query parameters for the period (e.g., `?period=last7days`)
 
 ### Visitor Graph Route
 - `GET /stats/visitors-graph`: Fetch data for the visitor graph, with query parameters for the period and project ID (optional)
