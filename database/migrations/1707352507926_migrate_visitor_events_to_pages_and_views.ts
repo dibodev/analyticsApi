@@ -74,7 +74,10 @@ export default class extends BaseSchema {
           .where('id', visitorEvent.visitor_id)
           .first()
 
+        console.log('visitor.id', visitor?.id)
+
         if (visitor && visitor.project_id) {
+          console.log('visitor.project_id', visitor.project_id)
           const project: Project | undefined = await Database.from('projects')
             .where('id', visitor.project_id)
             .first()
@@ -83,6 +86,8 @@ export default class extends BaseSchema {
             const pageUrl: string = `https://${project.domain}/`
             const endpoint: string = findEndpoint(pageUrl)
             let page: Page | undefined = await Database.from('pages').where('url', pageUrl).first()
+
+            console.log('page', page)
 
             if (!page) {
               const pagesRows: Array<number> = await Database.table('pages')
@@ -102,6 +107,8 @@ export default class extends BaseSchema {
               }
             }
 
+            console.log('page 2', page)
+
             if (page) {
               const userAgentsRows: Array<number> = await Database.table('user_agents')
                 .insert({
@@ -118,6 +125,10 @@ export default class extends BaseSchema {
                 .returning(['id'])
 
               const userAgentId: number | null = userAgentsRows[0]
+
+              console.log('userAgentId', userAgentId)
+
+              console.log('create page view')
 
               await Database.table('page_views').insert({
                 visitor_id: visitorEvent.visitor_id,
