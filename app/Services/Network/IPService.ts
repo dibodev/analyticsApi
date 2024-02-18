@@ -61,6 +61,9 @@ export type IPApiResponse = {
   }
 }
 
+/**
+ * Represents a service for retrieving IP address information.
+ */
 export default class IPService {
   /**
    * Retrieves IP address information from an external API.
@@ -102,20 +105,25 @@ export default class IPService {
   }
 
   /**
-   * Extracts location information from the provided IP API response.
+   * Extracts location information from an IP API response object.
    *
-   * @param {IPApiResponse | null} ipApiResponse - The IP API response.
-   * @return {LocationPayload | null} - The extracted location information.
-   *             Returns null if the IP API response is null.
+   * @param {IPApiResponse} ipApiResponse - Object containing IP API response.
+   * @return {LocationPayload} - Object containing extracted location information.
    */
-  public static extractLocationInfo(ipApiResponse: IPApiResponse | null): LocationPayload | null {
-    if (!ipApiResponse) {
-      return null
-    }
+  public static extractLocationInfo(ipApiResponse: IPApiResponse): LocationPayload {
     return {
+      continent: ipApiResponse.continent,
+      continentCode: ipApiResponse.continent_code,
       country: ipApiResponse.country,
+      countryCode: ipApiResponse.country_code,
       region: ipApiResponse.region,
+      regionCode: ipApiResponse.region_code,
       city: ipApiResponse.city,
+      latitude: ipApiResponse.latitude,
+      longitude: ipApiResponse.longitude,
+      postal: ipApiResponse.postal,
+      flagImgUrl: ipApiResponse.flag.img,
+      flagEmoji: ipApiResponse.flag.emoji,
     }
   }
 

@@ -1,7 +1,7 @@
 import Project from 'App/Models/Project'
 import DomainService from 'App/Services/DomainService'
 import Visitor from 'App/Models/Visitor'
-import AnalyticsViewsService from 'App/Services/analytics/AnalyticsViewsService'
+import AnalyticsViewsService from 'App/Services/Analytics/AnalyticsViewsService'
 import { DateTime } from 'luxon'
 
 export type ProjectWithUniqueVisitorCountLast24Hours = {
@@ -19,8 +19,8 @@ export default class ProjectService {
    * @param {number} id - Project ID
    * @returns {Promise<Project>} - Promise that resolves with the retrieved project.
    */
-  public static async getById(id: number): Promise<Project> {
-    return await Project.findOrFail(id)
+  public static async findById(id: number): Promise<Project | null> {
+    return await Project.query().where('id', id).first()
   }
 
   /**
@@ -65,7 +65,10 @@ export default class ProjectService {
           endAt: DateTime.now(),
         }
         const nbUniqueVisitorLast24Hours: number =
-          await AnalyticsViewsService.getUniqueViewsOfProject(project.id, periodOf24HoursAgo)
+          await AnalyticsViewsService.getUniqueViewsOfProject({
+            projectId: project.id,
+            period: periodOf24HoursAgo,
+          })
 
         return { project, nbUniqueVisitorLast24Hours }
       })

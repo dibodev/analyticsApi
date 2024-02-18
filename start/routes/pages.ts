@@ -1,6 +1,6 @@
 import Route from '@ioc:Adonis/Core/Route'
 
 Route.group(() => {
-  Route.get('/pages', 'StatsController.pages')
-  Route.get('/:domain/pages', 'StatsController/.domainPages')
-}).prefix('/stats')
+  Route.get('/pages', 'AnalyticsController.pages')
+  Route.get('/:domain/pages', 'AnalyticsController/.domainPages')
+}).prefix('/analytics')

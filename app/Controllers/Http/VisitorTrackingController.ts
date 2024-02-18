@@ -1,43 +1,36 @@
-// import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-// // import VisitorTrackingDataService from 'App/Services/VisitorTrackingDataService'
-// // import type { VisitorData } from 'App/Services/VisitorTrackingDataService'
-// import VisitorTrackingDataValidator from 'App/Validators/VisitorTrackingDataValidator'
-// import type { VisitorTrackingData } from 'App/Validators/VisitorTrackingDataValidator'
-// import IPService from 'App/Services/IPService'
-// import type { IPApiResponse } from 'App/Services/IPService'
-// import { RequestContract } from '@ioc:Adonis/Core/Request'
-//
-// export default class VisitorTrackingController {
-//   public async join({ request }: HttpContextContract): Promise<VisitorData> {
-//     const visitorTrackingData: VisitorTrackingData = await request.validate(
-//       VisitorTrackingDataValidator
-//     )
-//
-//     const userAgent: string | null = this.getUserAgent(visitorTrackingData, request)
-//
-//     const clientIpInfos: IPApiResponse | null = await IPService.getClientIpInfo(request)
-//
-//     return await VisitorTrackingDataService.collectVisitorData(clientIpInfos, {
-//       ...visitorTrackingData,
-//       userAgent,
-//     })
-//   }
-//   public async leave({ request, response }: HttpContextContract): Promise<void> {
-//     const visitorTrackingData: VisitorTrackingData = await request.validate(
-//       VisitorTrackingDataValidator
-//     )
-//     const userAgent: string | null = this.getUserAgent(visitorTrackingData, request)
-//
-//     const clientIpInfos: IPApiResponse | null = await IPService.getClientIpInfo(request)
-//
-//     await VisitorTrackingDataService.leave(clientIpInfos, { ...visitorTrackingData, userAgent })
-//     response.send({ success: true })
-//   }
-//
-//   private getUserAgent(
-//     visitorTrackingData: VisitorTrackingData,
-//     request: RequestContract
-//   ): string | null {
-//     return visitorTrackingData.userAgent || request.header('User-Agent') || null
-//   }
-// }
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import VisitorTrackingDataValidator from 'App/Validators/VisitorTrackingDataValidator'
+import type { VisitorTrackingDataPayload } from 'App/Validators/VisitorTrackingDataValidator'
+import VisitorTrackingDataService from 'App/Services/Tracking/VisitorTrackingDataService'
+
+export default class VisitorTrackingController {
+  /**
+   * Collects visitor tracking data and sends a response indicating success or failure.
+   *
+   * @param {HttpContextContract} httpContext - The HTTP context.
+   * @returns {Promise<void>} - Resolves with no value upon completion.
+   */
+  public async pageView({ request, response }: HttpContextContract): Promise<void> {
+    const visitorTrackingData: VisitorTrackingDataPayload = await request.validate(
+      VisitorTrackingDataValidator
+    )
+
+    try {
+      const { visitorId }: { visitorId: number } =
+        await VisitorTrackingDataService.collectVisitorData(visitorTrackingData, request)
+      response.send({ success: true, visitorId })
+    } catch (error) {
+      response.send({ success: false, error })
+    }
+  }
+  public async leave({ params, response, request }: HttpContextContract): Promise<void> {
+    const visitorId: number = params.visitorId
+
+    const visitorTrackingData: VisitorTrackingDataPayload = await request.validate(
+      VisitorTrackingDataValidator
+    )
+
+    await VisitorTrackingDataService.leave(visitorTrackingData, visitorId)
+    response.send({ success: true })
+  }
+}

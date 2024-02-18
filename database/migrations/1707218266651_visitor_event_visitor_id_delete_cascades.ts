@@ -5,7 +5,7 @@ export default class extends BaseSchema {
 
   public async up() {
     this.schema.alterTable(this.tableName, (table) => {
-      // First remove existing foreign key constraint
+      // First, remove existing foreign key constraint
       table.dropForeign(['visitor_id'])
 
       // Recreate foreign key constraint with onDelete('CASCADE')

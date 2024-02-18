@@ -76,7 +76,7 @@ New table for storing IP addresses and associated information.
 - **Column**: `location_id`
   - **Type**: Integer (index)
   - **Foreign Key**: References `locations.id`
-  - **Constraints**: Nullable
+  - **Constraints**: Not nullable
 - **Column**: `type` // Example: IPv4, IPv6
   - **Type**: String (10)
   - **Constraints**: Not nullable

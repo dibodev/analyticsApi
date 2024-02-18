@@ -7,7 +7,7 @@ import type { ProjectWithUniqueVisitorCountLast24Hours } from 'App/Services/Proj
 
 test.group('Projects Controller', (group: Group): void => {
   const domain: string = 'testproject.com'
-  // before each test, delete project with domain 'testproject.com' if it exists
+  // before each test, delete a project with domain 'testproject.com' if it exists
   group.setup(async (): Promise<void> => {
     await Project.query().where('domain', domain).delete()
   })
@@ -63,8 +63,8 @@ test.group('Projects Controller', (group: Group): void => {
     const project: Project = await Project.create({ domain })
 
     // Simulate visitors and page views
-    await simulateVisitorAndPageView(project.id)
-    await simulateVisitorAndPageView(project.id)
+    await simulateVisitorAndPageView({ projectId: project.id })
+    await simulateVisitorAndPageView({ projectId: project.id })
 
     const response: ApiResponse = await client.get('/projects')
     response.assertStatus(200)

@@ -16,7 +16,7 @@ export default class Visitor extends BaseModel {
   public visitorIp: BelongsTo<typeof VisitorIp>
 
   @column()
-  public projectId: number | null
+  public projectId: number
 
   @belongsTo(() => Project)
   public project: BelongsTo<typeof Project>

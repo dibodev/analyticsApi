@@ -5,7 +5,7 @@
  * @returns {number} The rounded number with two decimal places.
  */
 export const roundToTwoDecimals = (num: number): number => {
-  return Number(num.toFixed(2))
+  return Number(num.toFixed(2)) || 0
 }
 
 /**

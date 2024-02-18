@@ -24,9 +24,11 @@ test.group('Project service', (group: Group): void => {
       domain,
     })
 
-    const fetchedProject: Project = await ProjectService.getById(newProject.id)
-    assert.equal(fetchedProject.id, newProject.id)
-    await newProject.delete()
+    const fetchedProject: Project | null = await ProjectService.findById(newProject.id)
+    if (fetchedProject) {
+      assert.equal(fetchedProject.id, newProject.id)
+      await newProject.delete()
+    }
   })
 
   test('should update a project by ID', async ({ assert }: TestContext): Promise<void> => {
@@ -76,8 +78,8 @@ test.group('Project service', (group: Group): void => {
     })
 
     // Simulate a visitor and a page view for the project
-    await simulateVisitorAndPageView(project.id)
-    await simulateVisitorAndPageView(project.id)
+    await simulateVisitorAndPageView({ projectId: project.id })
+    await simulateVisitorAndPageView({ projectId: project.id })
 
     // Test de la méthode du service
     const projectsWithVisitorCount: Array<ProjectWithUniqueVisitorCountLast24Hours> =

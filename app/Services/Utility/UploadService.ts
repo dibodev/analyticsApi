@@ -3,9 +3,21 @@ import * as path from 'path'
 import Application from '@ioc:Adonis/Core/Application'
 import Env from '@ioc:Adonis/Core/Env'
 
+/**
+ * The UploadService class provides methods for uploading images to the server.
+ */
 export default class UploadService {
   private static publicPath: string = Application.publicPath()
   private static maxFileSize: number = 5 * 1024 * 1024 // 5 MB
+  /**
+   * Uploads an image to the server.
+   *
+   * @param {string | null} file - The image file path or null if no file is provided.
+   * @param {string | null} contentType - The content type of the image or null if no file is provided.
+   * @param {string} [name] - The name of the image. If not provided, a random name will be generated.
+   * @returns {Promise<string | null>} - The URL of the uploaded image or null if an error occurred.
+   * @throws {Error} - If the downloaded file is not an image or if the image size exceeds the maximum size.
+   */
   public static async uploadImage(
     file: string | null,
     contentType: string | null,

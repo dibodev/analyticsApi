@@ -7,7 +7,13 @@ export default class CreateVisitorIps extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.string('ip', 45).notNullable().unique()
-      table.integer('location_id').unsigned().index().references('id').inTable('locations')
+      table
+        .integer('location_id')
+        .notNullable()
+        .unsigned()
+        .index()
+        .references('id')
+        .inTable('locations')
       table.string('type', 10).notNullable()
       table.integer('asn')
       table.string('org', 100)

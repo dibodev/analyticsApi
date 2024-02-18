@@ -27,7 +27,7 @@ export default class VisitorIp extends BaseModel {
   public domain: string | null
 
   @column()
-  public locationId: number | null
+  public locationId: number
 
   @belongsTo(() => Location)
   public location: BelongsTo<typeof Location>

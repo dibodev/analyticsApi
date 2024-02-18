@@ -1,12 +1,8 @@
 import { DateTime } from 'luxon'
-
-export type AnalyticsPeriod = {
-  startAt: DateTime
-  endAt: DateTime
-}
+import type { AnalyticsPeriod } from 'App/Services/Analytics/AnalyticsTypes'
 
 export default class AnalyticsPeriodService {
-  // convert string period to startAt and endAt (e.g. '7d' -> { startAt: DateTime, endAt: DateTime })
+  // convert a string period to startAt and endAt (e.g. '7d' -> { startAt: DateTime, endAt: DateTime })
   /**
    * Retrieves the start and end date of an analytics period based on the given period name.
    *
