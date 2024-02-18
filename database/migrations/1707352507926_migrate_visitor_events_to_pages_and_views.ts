@@ -65,9 +65,10 @@ export default class extends BaseSchema {
 
   public async up() {
     const visitorEvents: Array<VisitorEvent> = await Database.from(this.tableName).select('*')
-    console.log('visitorEvents', visitorEvents)
+    console.log('Wait visitorEvents ...')
 
     for (const visitorEvent of visitorEvents) {
+      console.log('visitorEvent.visitor_id', visitorEvent.visitor_id)
       if (visitorEvent.visitor_id) {
         // Find the visitor with the visitor_id from the visitor_event
         const visitor: Visitor | undefined = await Database.from('visitors')
