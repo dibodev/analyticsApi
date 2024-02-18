@@ -40,6 +40,19 @@ type Visitor = {
   updated_at: string
 }
 
+type UserAgent = {
+  id: number
+  user_agent: string | null
+  browser_name: string | null
+  browser_version: string | null
+  browser_language: string | null
+  os_name: string | null
+  os_version: string | null
+  device_type: string | null
+  created_at: string
+  updated_at: string
+}
+
 export default class extends BaseSchema {
   protected tableName = 'visitor_events'
 
@@ -65,21 +78,36 @@ export default class extends BaseSchema {
               .first()
 
             if (page) {
-              const userAgentsRows: Array<number> = await Database.table('user_agents')
-                .insert({
-                  user_agent: null,
+              // find user_agent with browser_name and os_name and device_type
+              const userAgentAlreadyExist: UserAgent | null = await Database.from('user_agents')
+                .where({
                   browser_name: visitorEvent.browser,
-                  browser_version: null,
-                  browser_language: null,
                   os_name: visitorEvent.os,
-                  os_version: null,
                   device_type: visitorEvent.device_type,
-                  created_at: visitorEvent.created_at,
-                  updated_at: visitorEvent.updated_at,
                 })
-                .returning(['id'])
+                .first()
 
-              const userAgentId: number | null = userAgentsRows[0]
+              let userAgentId: number | null = userAgentAlreadyExist
+                ? userAgentAlreadyExist.id
+                : null
+
+              if (!userAgentAlreadyExist) {
+                const userAgentsRows: Array<number> = await Database.table('user_agents')
+                  .insert({
+                    user_agent: null,
+                    browser_name: visitorEvent.browser,
+                    browser_version: null,
+                    browser_language: null,
+                    os_name: visitorEvent.os,
+                    os_version: null,
+                    device_type: visitorEvent.device_type,
+                    created_at: visitorEvent.created_at,
+                    updated_at: visitorEvent.updated_at,
+                  })
+                  .returning(['id'])
+
+                userAgentId = userAgentsRows[0]
+              }
 
               await Database.table('page_views').insert({
                 visitor_id: visitorEvent.visitor_id,

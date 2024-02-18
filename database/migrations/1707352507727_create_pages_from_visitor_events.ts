@@ -78,12 +78,14 @@ export default class extends BaseSchema {
             .where('id', visitor.project_id)
             .first()
 
-          if (project) {
-            const pageUrl: string = `https://${project.domain}/`
-            const endpoint: string = findEndpoint(pageUrl)
+          const pageUrl: string | null = visitorEvent.url
+
+          if (project && pageUrl) {
             let page: Page | undefined = await Database.from('pages').where('url', pageUrl).first()
 
             if (!page) {
+              const endpoint: string = findEndpoint(pageUrl)
+
               const pagesRows: Array<number> = await Database.table('pages')
                 .insert({
                   url: pageUrl,
