@@ -30,6 +30,7 @@ jobs:
       - name: 📝 Update .env with Secrets
         run: |
           sed -i "s/APP_KEY=.*/APP_KEY=${{ secrets.APP_KEY }}/" .env
+          sed -i "s/OPENCAGE_API_KEY=.*/OPENCAGE_API_KEY=${{ secrets.OPENCAGE_API_KEY }}/" .env
           sed -i "s/MYSQL_DATABASE=.*/MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}/" .env
           sed -i "s/MYSQL_HOST=.*/MYSQL_HOST=${{ secrets.MYSQL_HOST }}/" .env
           sed -i "s/MYSQL_PORT=.*/MYSQL_PORT=${{ secrets.MYSQL_PORT }}/" .env
