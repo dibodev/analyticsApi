@@ -20,9 +20,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          
+
       - name: 🔍 Install dependencies
-        run: npm install    
+        run: npm install
 
       - name: 📝 Setup Production .env File
         run: cp .env.production .env
@@ -73,6 +73,4 @@ jobs:
             sudo systemctl restart nginx
             echo "Running Migrations..."
             node ace migration:run --force
-            echo "Running Seeders..."
-            node ace db:seed
             echo "Deployment completed successfully!"

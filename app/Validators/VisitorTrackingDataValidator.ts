@@ -1,7 +1,7 @@
 import { schema } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export interface VisitorTrackingData {
+export interface VisitorTrackingDataPayload {
   url: string
   referrer: string | null
   domain: string

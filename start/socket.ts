@@ -1,4 +1,4 @@
-import SocketIoService from 'App/Services/SocketIoService'
+import SocketIoService from 'App/Services/Utility/SocketIoService'
 
 SocketIoService.boot()
 
