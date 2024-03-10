@@ -3,6 +3,7 @@ import DomainService from 'App/Services/DomainService'
 import Visitor from 'App/Models/Visitor'
 import AnalyticsViewsService from 'App/Services/Analytics/AnalyticsViewsService'
 import { DateTime } from 'luxon'
+import NotFoundException from 'App/Exceptions/NotFoundException'
 
 export type ProjectWithUniqueVisitorCountLast24Hours = {
   project: Project
@@ -10,6 +11,11 @@ export type ProjectWithUniqueVisitorCountLast24Hours = {
 }
 
 export default class ProjectService {
+  /**
+   * Retrieves all the projects.
+   *
+   * @returns {Promise<Array<Project>>} A Promise that resolves to an array of Project objects.
+   */
   public static async getAll(): Promise<Array<Project>> {
     return await Project.all()
   }
@@ -38,12 +44,35 @@ export default class ProjectService {
   }
 
   /**
-   * Retrieves a project by its domain.
-   * @param domain - Project domain
-   * @returns Promise<Project>
+   * Find or create a Project by domain.
+   *
+   * @param {string} domain - The domain to find or create the Project for.
+   * @returns {Promise<Project>} - A Promise that resolves to a Project.
+   * @throws {Error} - If an error occurs during the operation.
    */
+  public static async findOrCreateByDomain(domain: string): Promise<Project> {
+    try {
+      return await this.getByDomain(domain)
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        return await this.create(domain)
+      }
+      throw error
+    }
+  }
+
+  /**
+   * Retrieves a project by its domain.
+   *
+   **/
   public static async getByDomain(domain: string): Promise<Project> {
-    return await Project.query().where('domain', domain).firstOrFail()
+    const project: Project | null = await Project.findBy('domain', domain)
+
+    if (!project) {
+      throw new NotFoundException(`Project with domain ${domain} not found.`)
+    }
+
+    return project
   }
 
   /**

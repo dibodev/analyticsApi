@@ -5,7 +5,8 @@ import PageService from 'App/Services/PageService'
 import PageViewFilterService from 'App/Services/PageView/PageViewFilterService'
 import type { AnalyticsProjectViewsPayload } from 'App/Services/Analytics/AnalyticsTypes'
 import type { PageViewPayload } from 'App/Services/PageView/PageViewTypes'
-import { DateTime } from 'luxon'
+import DateProvider from 'App/providers/DateProvider'
+import NotFoundException from 'App/Exceptions/NotFoundException'
 
 /**
  * Represents a service for managing page views.
@@ -74,13 +75,30 @@ export default class PageViewService {
    * @return {Promise<PageView>} - A promise that resolves with the newly created PageView record.
    */
   public static async create(pageViewPayload: PageViewPayload): Promise<PageView> {
-    const sessionStart: string = DateTime.now().toISO()
-    const sessionEnd: string | undefined = pageViewPayload.sessionEnd?.toISO() || undefined
+    const sessionStart: string = new DateProvider().toFormattedString()
+    const sessionEnd: string | undefined = pageViewPayload.sessionEnd
+      ? new DateProvider(pageViewPayload.sessionEnd).toFormattedString()
+      : undefined
 
     return await PageView.create({
       ...pageViewPayload,
       sessionStart,
       sessionEnd,
     })
+  }
+
+  /**
+   * Finds a PageView by its ID.
+   *
+   * @param {number} id - The ID of the PageView to find.
+   * @return {Promise<PageView>} - A promise that resolves to the found PageView.
+   * @throws {NotFoundException} - Thrown when the PageView is not found.
+   */
+  public static async findById(id: number): Promise<PageView> {
+    const pageView: PageView | null = await PageView.find(id)
+    if (!pageView) {
+      throw new NotFoundException('PageView not found')
+    }
+    return pageView
   }
 }

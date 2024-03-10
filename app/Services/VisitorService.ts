@@ -1,6 +1,8 @@
 import Visitor from 'App/Models/Visitor'
 import ProjectService from 'App/Services/ProjectService'
 import Project from 'App/Models/Project'
+import VisitorIpService from 'App/Services/VisitorIpService'
+import VisitorIp from 'App/Models/VisitorIp'
 
 export type CreateVisitorPayload = {
   visitorIpId?: number
@@ -43,6 +45,14 @@ export default class VisitorService {
    */
   public static async findByVisitorIpId(visitorIpId: number): Promise<Visitor | null> {
     return await Visitor.query().where('visitor_ip_id', visitorIpId).first()
+  }
+
+  public static async findByIp(ip: string): Promise<Visitor | null> {
+    const visitorIp: VisitorIp | null = await VisitorIpService.findByIp(ip)
+    if (!visitorIp) {
+      return null
+    }
+    return await VisitorService.findByVisitorIpId(visitorIp.id)
   }
 
   /**

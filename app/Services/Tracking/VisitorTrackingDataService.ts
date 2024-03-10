@@ -19,6 +19,8 @@ import UserAgent from 'App/Models/UserAgent'
 import UserAgentService from 'App/Services/UserAgentService'
 import UAParser from 'ua-parser-js'
 import type { UAParserInstance } from 'ua-parser-js'
+import Logger from '@ioc:Adonis/Core/Logger'
+import PageView from 'App/Models/PageView'
 
 export default class VisitorTrackingDataService {
   /**
@@ -32,17 +34,17 @@ export default class VisitorTrackingDataService {
   public static async collectVisitorData(
     visitorTrackingData: VisitorTrackingDataPayload,
     request: RequestContract
-  ): Promise<{ visitorId: number }> {
+  ): Promise<{ pageViewId: number }> {
     // Determines whether the domain of a visitor is matched with the provided hostname.
-    const isDomainMatched = visitorTrackingData.domain === request.hostname()
+    const isDomainMatched: boolean = visitorTrackingData.domain === request.hostname()
 
     // If the domain of a visitor is not matched with the provided hostname, throw an error.
     if (!isDomainMatched) {
       throw new Error('Domain mismatch')
     }
 
-    // Retrieves a project by its domain.
-    const project: Project = await ProjectService.getByDomain(visitorTrackingData.domain)
+    // Retrieves a project by its domain. If the project does not exist, creates a new one.
+    const project: Project = await ProjectService.findOrCreateByDomain(visitorTrackingData.domain)
 
     // Represents the client IP information.
     const clientIpInfos: IPApiResponse | null = await IPService.getClientIpInfo(request)
@@ -65,10 +67,6 @@ export default class VisitorTrackingDataService {
       visitorIp?.id
     )
 
-    // Adds a visitor to the specified domain in the realtimeVisitors.
-    AnalyticsRealTimeService.addVisitor(visitorTrackingData.domain, visitor.id)
-    AnalyticsRealTimeService.emitVisitorCountForProject(visitorTrackingData.domain)
-
     // Finds or creates a page record by URL.
     const endpoint: string = UrlUtils.findEndpoint(visitorTrackingData.url)
 
@@ -89,7 +87,7 @@ export default class VisitorTrackingDataService {
     const deviceType: string | undefined = uaParser.getDevice().type
     const referrer: string | undefined = visitorTrackingData.referrer || undefined
 
-    const userAgentEntity: UserAgent = await UserAgentService.create({
+    const userAgentEntity: UserAgent = await UserAgentService.findOrCreate({
       userAgent,
       browserName,
       browserVersion,
@@ -100,34 +98,45 @@ export default class VisitorTrackingDataService {
     })
 
     // Creates a page view record.
-    await PageViewService.create({
+    const pageView: PageView = await PageViewService.create({
       visitorId: visitor.id,
       pageId: page.id,
       userAgentId: userAgentEntity.id,
       referrer,
     })
 
+    // Adds a visitor to the specified domain in the realtimeVisitors.
+    if (visitorIp) {
+      await AnalyticsRealTimeService.addVisitor(pageView.id, visitorIp.ip)
+      // AnalyticsRealTimeService.emitVisitorCountForProject(visitorTrackingData.domain)
+    }
+
     return {
-      visitorId: visitor.id,
+      pageViewId: pageView.id,
     }
   }
-  /**
-   * Removes the visitor with the specified visitorId from the analytics real-time service.
-   * Updates the visitor count for the project associated with the visitorTrackingData domain.
-   *
-   * @param {VisitorTrackingDataPayload} visitorTrackingData - The tracking data for the visitor.
-   * @param {number} visitorId - The ID of the visitor to remove.
-   *
-   * @return {Promise<void>} A Promise that resolves when the visitor is removed.
-   */
-  public static async leave(
-    visitorTrackingData: VisitorTrackingDataPayload,
-    visitorId: number
-  ): Promise<void> {
-    if (visitorId) {
-      AnalyticsRealTimeService.removeVisitor(visitorTrackingData.domain, visitorId)
-      AnalyticsRealTimeService.emitVisitorCountForProject(visitorTrackingData.domain)
-    }
+  // /**
+  //  * Removes the visitor with the specified visitorId from the analytics real-time service.
+  //  * Updates the visitor count for the project associated with the visitorTrackingData domain.
+  //  *
+  //  * @param {VisitorTrackingDataPayload} visitorTrackingData - The tracking data for the visitor.
+  //  * @param {number} visitorId - The ID of the visitor to remove.
+  //  *
+  //  * @return {Promise<void>} A Promise that resolves when the visitor is removed.
+  //  */
+  // public static async leave(
+  //   visitorTrackingData: VisitorTrackingDataPayload,
+  //   visitorId: number
+  // ): Promise<void> {
+  //   if (visitorId) {
+  //     AnalyticsRealTimeService.removeVisitor(visitorTrackingData.domain, visitorId)
+  //     AnalyticsRealTimeService.emitVisitorCountForProject(visitorTrackingData.domain)
+  //   }
+  // }
+
+  public static async leave(pageViewId: number, ip: string): Promise<void> {
+    Logger.info('Leave visitor tracking data service')
+    await AnalyticsRealTimeService.removeVisitor(pageViewId, ip)
   }
 
   /**

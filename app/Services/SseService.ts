@@ -5,6 +5,7 @@ export class SseService {
 
   public static addClient(id: string, client: ResponseContract) {
     this.clients.set(id, client)
+    this.sendMessage(id, 'connected')
   }
 
   public static removeClient(id: string) {
@@ -15,7 +16,7 @@ export class SseService {
     const client = this.clients.get(id)
     if (client) {
       console.log('sending message', message)
-      // client.write(`data: ${message}\n\n`)
+      client.response.write(`data: ${message}\n\n`)
     }
   }
 

@@ -4,9 +4,6 @@ Route.get('/', async () => {
   return { success: true, version: 2.4 }
 })
 
-/* SERVER SENT EVENTS */
-Route.get('/sse', 'SseController.init')
-
 /* ANALYTICS JS CLIENT SCRIPTS */
 Route.get('/analytics.js', async ({ response }) => {
   return response.download(Application.publicPath('analytics.js'))
@@ -19,9 +16,11 @@ Route.post('/projects', 'ProjectsController.store')
 Route.put('/projects/:id', 'ProjectsController.update')
 Route.delete('/projects/:id', 'ProjectsController.destroy')
 
+/* SERVER SENT EVENTS */
+Route.get('/sse/pageview', 'SseController.initPageView')
+
 /* VISITOR TRACKING */
 Route.post('/pageview', 'VisitorTrackingController.pageView')
-Route.post('/leave', 'VisitorTrackingController.leave')
 
 /* ANALYTICS */
 

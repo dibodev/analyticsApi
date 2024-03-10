@@ -15,22 +15,8 @@ export default class VisitorTrackingController {
       VisitorTrackingDataValidator
     )
 
-    try {
-      const { visitorId }: { visitorId: number } =
-        await VisitorTrackingDataService.collectVisitorData(visitorTrackingData, request)
-      response.send({ success: true, visitorId })
-    } catch (error) {
-      response.send({ success: false, error })
-    }
-  }
-  public async leave({ params, response, request }: HttpContextContract): Promise<void> {
-    const visitorId: number = params.visitorId
-
-    const visitorTrackingData: VisitorTrackingDataPayload = await request.validate(
-      VisitorTrackingDataValidator
-    )
-
-    await VisitorTrackingDataService.leave(visitorTrackingData, visitorId)
-    response.send({ success: true })
+    const { pageViewId }: { pageViewId: number } =
+      await VisitorTrackingDataService.collectVisitorData(visitorTrackingData, request)
+    response.send({ success: true, pageViewId })
   }
 }
